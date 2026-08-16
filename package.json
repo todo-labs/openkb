@@ -1,0 +1,19 @@
+{
+  "name": "openkb-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenKB: Open-Source AI-Native Documentation & Knowledge Engine",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.3"
+  }
+}
