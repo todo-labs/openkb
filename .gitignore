@@ -18,6 +18,7 @@ coverage/
 Thumbs.db
 .idea/
 .vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
+# Test & Scratch
+test-wiki/
+.last-update.json
 *.log
