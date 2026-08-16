@@ -33,7 +33,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.15.0
+          version: 8
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -42,13 +42,13 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build documentation site
         env:
           ASTRO_TELEMETRY_DISABLED: '1'
           GITHUB_PAGES: 'true'
-        run: pnpm --filter openkb-docs build
+        run: pnpm run build
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
