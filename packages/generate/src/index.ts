@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { synthesizeWithOpenCode } from './opencode.js';
+import { discoverConceptsWithOpenCode, synthesizeWithOpenCode } from './opencode.js';
 import { injectAgentPointers } from './agent-pointers.js';
 import { saveState } from './state.js';
 import { validateGeneratedOkf } from './validation.js';
@@ -20,12 +20,8 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const conceptsToGenerate = [
-    { name: 'architecture', title: 'Architecture Overview', type: 'Architecture' },
-    { name: 'quickstart', title: 'Quickstart Guide', type: 'Workflow' },
-    { name: 'modules', title: 'Core Modules & Services', type: 'Module' },
-  ];
-
+  console.log('🗺️  [OpenKB] Discovering the repository’s complete concept inventory via OpenCode...');
+  const conceptsToGenerate = await discoverConceptsWithOpenCode(rootDir);
   console.log(`🤖 [OpenKB] Synthesizing ${conceptsToGenerate.length} evidence-backed OKF v0.2 concept documents via OpenCode...`);
 
   const generatedFiles: string[] = [];
@@ -34,18 +30,14 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
     console.log(`   ⏳ Synthesizing "${concept.title}" (${concept.type})...`);
     
     try {
-      const response = await synthesizeWithOpenCode({
-        rootDir,
-        title: concept.title,
-        type: concept.type,
-      });
+      const response = await synthesizeWithOpenCode({ rootDir, title: concept.title, type: concept.type, description: concept.description, suggestedSources: concept.sources });
 
-      const targetPath = path.join(outputDir, `${concept.name}.mdx`);
+      const targetPath = path.join(outputDir, `${concept.slug}.mdx`);
       fs.writeFileSync(targetPath, validateGeneratedOkf(response, rootDir), 'utf-8');
-      generatedFiles.push(concept.name);
+      generatedFiles.push(concept.slug);
       console.log(`   ✅ Saved: ${targetPath}`);
     } catch (err: any) {
-      console.error(`   ❌ Failed to generate ${concept.name}:`, err?.message || err);
+      console.error(`   ❌ Failed to generate ${concept.slug}:`, err?.message || err);
     }
   }
 

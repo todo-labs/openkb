@@ -26,7 +26,7 @@ OpenKB uses `openrouter/deepseek/deepseek-v4-flash` as its fixed synthesis model
 
 ## Current workflow
 
-OpenCode performs repository exploration for each of three starter concept documents: architecture, quickstart, and modules. It is restricted to OpenRouter as its model provider. The embedded `openkb-docs` agent is read-only: file edits, shell access, web access, and external directories are denied. It must cite real repository-relative source files, and OpenKB rejects drafts with invalid or fabricated provenance. Generated documents update agent pointers in `AGENTS.md` and `CLAUDE.md` and record generation state alongside the output.
+OpenCode first maps the repository into a complete, non-overlapping inventory of material concepts. OpenKB then generates one OKF document for every discovered concept—there is no fixed document-count cap. It is restricted to OpenRouter as its model provider. The embedded planning and documentation agents are read-only: file edits, shell access, web access, and external directories are denied. They must cite real repository-relative source files, and OpenKB rejects drafts with invalid or fabricated provenance. Generated documents update agent pointers in `AGENTS.md` and `CLAUDE.md` and record generation state alongside the output.
 
 Treat generated files as drafts: review their claims and source links before marking them verified in OKF frontmatter.
 
