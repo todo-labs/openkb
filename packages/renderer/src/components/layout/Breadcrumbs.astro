@@ -9,11 +9,12 @@ interface Props {
 const { currentSlug, flatNav } = Astro.props;
 const normalized = currentSlug.replace(/^\//, '').replace(/\/$/, '') || 'index';
 const currentItem = flatNav.find((item) => item.slug === normalized);
+const homeHref = import.meta.env.BASE_URL || '/';
 ---
 
 {currentItem && (
   <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6 dark:text-slate-400">
-    <a href="/" class="hover:text-emerald-600 dark:hover:text-emerald-400">Docs</a>
+    <a href={homeHref} class="hover:text-[var(--primary-color,#10b981)]">Docs</a>
     {currentItem.tab && (
       <>
         <span>/</span>

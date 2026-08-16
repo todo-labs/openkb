@@ -39,6 +39,11 @@ const {
 const pageTitle = frontmatter.title ? `${frontmatter.title} — ${config.name}` : config.name;
 const pageDescription = frontmatter.description || config.description || 'Open-source documentation powered by OpenKB and Google OKF';
 const cssVars = generateCssVariables(config);
+const baseUrl = import.meta.env.BASE_URL || '/';
+const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+const faviconUrl = config.favicon.startsWith('http')
+  ? config.favicon
+  : `${cleanBase}${config.favicon.replace(/^\//, '')}`;
 ---
 
 <!doctype html>
@@ -48,7 +53,7 @@ const cssVars = generateCssVariables(config);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-    <link rel="icon" type="image/svg+xml" href={config.favicon} />
+    <link rel="icon" type="image/svg+xml" href={faviconUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -98,9 +103,9 @@ const cssVars = generateCssVariables(config);
     <SearchModal client:load />
 
     <!-- Load pagefind dynamically if present in dist -->
-    <script is:inline>
+    <script is:inline define:vars={{ cleanBase }}>
       if (typeof window !== 'undefined') {
-        import('/pagefind/pagefind.js')
+        import(`${cleanBase}pagefind/pagefind.js`)
           .then((m) => {
             window.pagefind = m;
           })
