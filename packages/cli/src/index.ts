@@ -1,11 +1,33 @@
-#!/usr/bin/env node
-
+import fs from 'node:fs';
+import path from 'node:path';
 import { Command } from 'commander';
 import { initCommand } from './commands/init.js';
 import { devCommand } from './commands/dev.js';
 import { buildCommand } from './commands/build.js';
 import { validateCommand } from './commands/validate.js';
 import { generateCommand } from './commands/generate.js';
+
+// Auto-load .env file if present
+const envPath = path.join(process.cwd(), '.env');
+if (fs.existsSync(envPath)) {
+  try {
+    if (typeof (process as any).loadEnvFile === 'function') {
+      (process as any).loadEnvFile(envPath);
+    } else {
+      const content = fs.readFileSync(envPath, 'utf-8');
+      for (const line of content.split('\n')) {
+        const trimmed = line.trim();
+        if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+          const [key, ...rest] = trimmed.split('=');
+          const value = rest.join('=').replace(/^["'](.*)["']$/, '$1');
+          if (key && !process.env[key.trim()]) {
+            process.env[key.trim()] = value.trim();
+          }
+        }
+      }
+    }
+  } catch {}
+}
 
 const program = new Command();
 
