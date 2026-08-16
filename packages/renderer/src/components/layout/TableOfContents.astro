@@ -14,23 +14,116 @@ const filteredHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 {filteredHeadings.length > 0 && (
-  <div class="hidden xl:block w-64 shrink-0 py-6 pl-6 text-xs border-l border-slate-200 dark:border-slate-800">
-    <div class="sticky top-24">
-      <h5 class="mb-3 font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        On this page
-      </h5>
-      <ul class="space-y-2">
-        {filteredHeadings.map((h) => (
-          <li class={h.depth === 3 ? 'pl-3' : ''}>
-            <a
-              href={`#${h.slug}`}
-              class="block text-slate-600 hover:text-[var(--primary-color,#10b981)] transition-colors line-clamp-1 dark:text-slate-400"
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ul>
+  <aside class="toc-panel" aria-label="Table of contents">
+    <div class="toc-inner">
+      <p class="toc-title">On this page</p>
+      <nav>
+        <ul class="toc-list" role="list">
+          {filteredHeadings.map((h) => (
+            <li class={`toc-item ${h.depth === 3 ? 'toc-item--nested' : ''}`}>
+              <a href={`#${h.slug}`} class="toc-link" data-heading={h.slug}>
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
-  </div>
+  </aside>
 )}
+
+<style>
+  .toc-panel {
+    display: none;
+    width: 13.5rem;
+    flex-shrink: 0;
+  }
+  @media (min-width: 1280px) { .toc-panel { display: block; } }
+
+  .toc-inner {
+    position: sticky;
+    top: calc(3.625rem + 1.5rem);
+    padding-block: 1.5rem;
+    padding-inline-start: 1.25rem;
+    border-left: 1px solid var(--border-color);
+    max-height: calc(100dvh - 6rem);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .toc-inner::-webkit-scrollbar { display: none; }
+
+  .toc-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 0.25rem 0;
+    font-size: 0.8125rem;
+    color: var(--text-faint);
+    text-decoration: none;
+    line-height: 1.45;
+    transition: color 0.12s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 2px solid transparent;
+    padding-left: 0.625rem;
+    margin-left: -0.625rem;
+  }
+  .toc-link:hover {
+    color: var(--text-muted);
+  }
+  .toc-link--active {
+    color: var(--primary-color) !important;
+    border-left-color: var(--primary-color);
+    font-weight: 500;
+  }
+
+  .toc-item--nested .toc-link {
+    padding-left: 1.25rem;
+    margin-left: -0.625rem;
+    font-size: 0.78125rem;
+  }
+</style>
+
+<script is:inline>
+  // Intersection Observer for active heading highlight
+  const tocLinks = document.querySelectorAll('.toc-link[data-heading]');
+  if (tocLinks.length > 0) {
+    const headingIds = Array.from(tocLinks).map((l) => l.dataset.heading);
+    const headingEls = headingIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    let activeId = null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            activeId = entry.target.id;
+          }
+        }
+        tocLinks.forEach((link) => {
+          link.classList.toggle('toc-link--active', link.dataset.heading === activeId);
+        });
+      },
+      { rootMargin: '-20% 0% -70% 0%', threshold: 0 }
+    );
+    headingEls.forEach((el) => observer.observe(el));
+  }
+</script>

@@ -10,41 +10,26 @@ const { sections, currentSlug } = Astro.props;
 const normalizedCurrent = currentSlug.replace(/^\//, '').replace(/\/$/, '') || 'index';
 ---
 
-<aside class="w-64 shrink-0 hidden md:block py-6 pr-6 border-r border-slate-200 dark:border-slate-800">
-  <nav class="space-y-6">
+<aside class="sidebar" aria-label="Documentation navigation">
+  <nav class="sidebar-nav">
     {sections.map((section) => (
-      <div>
+      <div class="sidebar-section">
         {section.title && (
-          <h5 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            {section.title}
-          </h5>
+          <p class="sidebar-section-title">{section.title}</p>
         )}
-        <ul class="space-y-1">
+        <ul class="sidebar-list" role="list">
           {section.items.map((item) => {
             const isActive = item.slug === normalizedCurrent;
             return (
-              <li>
+              <li class="sidebar-item">
                 <a
                   href={item.href}
-                  style={
-                    isActive
-                      ? "background-color: var(--primary-50, rgba(16, 185, 129, 0.1)); color: var(--primary-color, #10b981);"
-                      : undefined
-                  }
-                  class={`flex items-center justify-between rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'font-semibold'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200'
-                  }`}
+                  class={`sidebar-link ${isActive ? 'sidebar-link--active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
                 >
-                  <span class="truncate">{item.title}</span>
+                  <span class="sidebar-link-text">{item.title}</span>
                   {item.tag && (
-                    <span
-                      style="background-color: var(--primary-100, rgba(16, 185, 129, 0.2)); color: var(--primary-color, #10b981);"
-                      class="ml-2 rounded px-1.5 py-0.5 text-[10px] font-semibold"
-                    >
-                      {item.tag}
-                    </span>
+                    <span class="sidebar-badge">{item.tag}</span>
                   )}
                 </a>
               </li>
@@ -55,3 +40,106 @@ const normalizedCurrent = currentSlug.replace(/^\//, '').replace(/\/$/, '') || '
     ))}
   </nav>
 </aside>
+
+<style>
+  .sidebar {
+    position: sticky;
+    top: 3.625rem;
+    display: none;
+    width: 15rem;
+    flex-shrink: 0;
+    height: calc(100dvh - 3.625rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1.5rem 0 3rem;
+    border-right: 1px solid var(--border-color);
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .sidebar:hover {
+    scrollbar-color: var(--border-color) transparent;
+  }
+  @media (min-width: 768px) { .sidebar { display: block; } }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding-inline-end: 1.25rem;
+  }
+
+  .sidebar-section-title {
+    margin: 0 0 0.375rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .sidebar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.0625rem;
+  }
+
+  .sidebar-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.4375rem;
+    font-size: 0.875rem;
+    font-weight: 450;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.12s, background-color 0.12s;
+    line-height: 1.4;
+  }
+
+  .sidebar-link:hover {
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
+  }
+
+  .sidebar-link--active {
+    color: var(--primary-color) !important;
+    background-color: var(--primary-50) !important;
+    font-weight: 550;
+  }
+  /* Left border indicator on active link */
+  .sidebar-link--active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 60%;
+    background-color: var(--primary-color);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .sidebar-link-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar-badge {
+    flex-shrink: 0;
+    padding: 0.0625rem 0.4375rem;
+    border-radius: 9999px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background-color: var(--primary-100);
+    color: var(--primary-color);
+  }
+</style>

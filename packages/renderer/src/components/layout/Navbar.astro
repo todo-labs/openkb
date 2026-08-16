@@ -15,49 +15,40 @@ const baseUrl = import.meta.env.BASE_URL || '/';
 const homeHref = config.logo?.href || baseUrl;
 ---
 
-<header class="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
-  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+<header id="site-header" class="site-header">
+  <div class="header-inner">
     <!-- Brand / Logo -->
-    <div class="flex items-center gap-6">
-      <a href={homeHref} class="flex items-center gap-2.5 no-underline">
+    <div class="header-left">
+      <a href={homeHref} class="brand-link">
         {config.logo?.light ? (
-          <img src={config.logo.light} alt={config.name} class="h-7 w-auto dark:hidden" />
+          <img src={config.logo.light} alt={config.name} class="brand-logo light-logo" />
         ) : null}
         {config.logo?.dark ? (
-          <img src={config.logo.dark} alt={config.name} class="hidden h-7 w-auto dark:block" />
+          <img src={config.logo.dark} alt={config.name} class="brand-logo dark-logo" />
         ) : null}
         {!config.logo?.light && !config.logo?.dark ? (
-          <div
-            class="flex h-7 w-7 items-center justify-center rounded-lg text-white font-bold text-sm shadow-sm"
-            style="background-color: var(--primary-color, #10b981);"
-          >
-            OK
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor" opacity="0.8"/>
+              <rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/>
+              <rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/>
+              <rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity="0.5"/>
+            </svg>
           </div>
         ) : null}
-        <span class="text-base font-bold text-slate-900 dark:text-slate-100">
-          {config.name}
-        </span>
+        <span class="brand-name">{config.name}</span>
       </a>
 
-      <!-- Horizontal Tabs Navigation if present -->
+      <!-- Horizontal Tabs -->
       {hasTabs && (
-        <nav class="hidden md:flex items-center gap-1 ml-4 border-l border-slate-200 pl-4 dark:border-slate-800">
+        <nav class="tab-nav" aria-label="Documentation tabs">
           {config.navigation.tabs!.map((tab) => {
             const isActive = activeTab?.tab === tab.tab;
             const firstPage = tab.pages?.[0] || tab.groups?.[0]?.pages?.[0];
             const pageSlug = typeof firstPage === 'string' ? firstPage.replace(/^\//, '').replace(/\.mdx?$/, '') : 'index';
             const href = tab.href || formatNavHref(pageSlug, baseUrl);
-
             return (
-              <a
-                href={href}
-                style={isActive ? "color: var(--primary-color, #10b981);" : undefined}
-                class={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-slate-100 font-semibold dark:bg-slate-800'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900'
-                }`}
-              >
+              <a href={href} class={`tab-link ${isActive ? 'tab-link--active' : ''}`}>
                 {tab.tab}
               </a>
             );
@@ -66,34 +57,33 @@ const homeHref = config.logo?.href || baseUrl;
       )}
     </div>
 
-    <!-- Actions: Search, Links, Theme Toggle -->
-    <div class="flex items-center gap-3">
-      <!-- Search Trigger Button -->
+    <!-- Right Actions -->
+    <div class="header-right">
+      <!-- Search Trigger -->
       <button
         type="button"
         id="openkb-search-trigger"
-        class="flex h-9 w-48 sm:w-64 items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs text-slate-500 hover:border-slate-300 hover:bg-slate-100 transition dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-slate-700"
+        class="search-trigger"
+        aria-label="Search documentation"
       >
-        <span class="flex items-center gap-2">
-          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <span class="search-trigger-inner">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
-          <span>Search docs...</span>
+          <span class="search-placeholder">Search...</span>
         </span>
-        <kbd class="hidden sm:inline-block rounded bg-slate-200 px-1.5 py-0.5 font-mono text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-          ⌘K
-        </kbd>
+        <kbd class="search-kbd">⌘K</kbd>
       </button>
 
-      <!-- Navbar Links -->
+      <!-- External Nav Links -->
       {config.navbar?.links && config.navbar.links.length > 0 && (
-        <div class="hidden lg:flex items-center gap-4 border-l border-slate-200 pl-4 dark:border-slate-800">
+        <div class="nav-links" role="navigation" aria-label="External links">
           {config.navbar.links.map((link) => (
             <a
               href={link.href}
               target={link.target}
               rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
-              class="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+              class="nav-link"
             >
               {link.label}
             </a>
@@ -101,40 +91,266 @@ const homeHref = config.logo?.href || baseUrl;
         </div>
       )}
 
-      <!-- Primary CTA button -->
-      {config.navbar?.primary && (
+      <!-- GitHub Link if provided -->
+      {config.navbar?.links?.find((l) => l.href?.includes('github.com')) && (
         <a
-          href={config.navbar.primary.href}
-          style="background-color: var(--primary-color, #10b981);"
-          class="hidden sm:inline-flex items-center justify-center rounded-lg px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:opacity-90 transition"
+          href={config.navbar.links.find((l) => l.href?.includes('github.com'))!.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="icon-btn"
+          aria-label="View on GitHub"
         >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+        </a>
+      )}
+
+      <!-- Primary CTA -->
+      {config.navbar?.primary && (
+        <a href={config.navbar.primary.href} class="cta-btn">
           {config.navbar.primary.label}
         </a>
       )}
 
-      <!-- Theme Switcher -->
+      <!-- Theme Toggle -->
       <button
         type="button"
         id="theme-toggle"
-        class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-900 transition"
+        class="icon-btn"
+        aria-label="Toggle color theme"
         title="Toggle color theme"
       >
-        <svg class="h-4 w-4 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        <!-- Sun: shown in dark mode -->
+        <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/>
         </svg>
-        <svg class="hidden h-4 w-4 dark:block text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        <!-- Moon: shown in light mode -->
+        <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
     </div>
   </div>
 </header>
 
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background-color: var(--navbar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 90rem;
+    margin-inline: auto;
+    height: 3.625rem;
+    padding-inline: 1.5rem;
+    gap: 1rem;
+  }
+
+  /* ── Left ── */
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 1px 4px rgba(16, 185, 129, 0.4);
+  }
+
+  .brand-name {
+    font-size: 0.9375rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+
+  .brand-logo { height: 1.75rem; width: auto; }
+  .light-logo { display: block; }
+  .dark-logo  { display: none; }
+  :global(.dark) .light-logo { display: none; }
+  :global(.dark) .dark-logo  { display: block; }
+
+  .tab-nav {
+    display: none;
+    align-items: center;
+    gap: 0.125rem;
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--border-color);
+  }
+  @media (min-width: 768px) { .tab-nav { display: flex; } }
+
+  .tab-link {
+    padding: 0.3125rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s, background-color 0.15s;
+  }
+  .tab-link:hover {
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
+  }
+  .tab-link--active {
+    color: var(--primary-color) !important;
+    background-color: var(--primary-50);
+    font-weight: 600;
+  }
+
+  /* ── Right ── */
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* Search */
+  .search-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    height: 2.125rem;
+    width: 11rem;
+    padding-inline: 0.625rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-subtle);
+    color: var(--text-faint);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
+  }
+  .search-trigger:hover {
+    border-color: var(--text-faint);
+    background-color: var(--bg-elevated);
+    box-shadow: var(--shadow-sm);
+  }
+  .search-trigger-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .search-icon { flex-shrink: 0; }
+  .search-placeholder { white-space: nowrap; }
+  .search-kbd {
+    display: none;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    background-color: var(--border-color);
+    font-family: ui-monospace, monospace;
+    font-size: 0.6875rem;
+    color: var(--text-faint);
+    line-height: 1.4;
+  }
+  @media (min-width: 640px) {
+    .search-trigger { width: 14rem; }
+    .search-kbd { display: inline; }
+  }
+
+  /* Nav links */
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--border-color);
+  }
+  @media (min-width: 1024px) { .nav-links { display: flex; } }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-link:hover { color: var(--text-main); }
+
+  /* Icon button */
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+    text-decoration: none;
+  }
+  .icon-btn:hover {
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
+  }
+
+  /* Theme icon visibility */
+  .icon-sun { display: none; }
+  .icon-moon { display: block; }
+  :global(.dark) .icon-sun { display: block; }
+  :global(.dark) .icon-moon { display: none; }
+
+  /* CTA button */
+  .cta-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.875rem;
+    border-radius: 0.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.35);
+    transition: opacity 0.15s, box-shadow 0.15s;
+  }
+  .cta-btn:hover {
+    opacity: 0.9;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+  }
+  @media (min-width: 640px) { .cta-btn { display: flex; } }
+</style>
+
 <script is:inline>
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || document.documentElement.classList.contains('dark');
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+        || document.documentElement.classList.contains('dark');
       if (isDark) {
         document.documentElement.removeAttribute('data-theme');
         document.documentElement.classList.remove('dark');

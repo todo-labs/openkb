@@ -28,27 +28,36 @@ export const Card: React.FC<CardProps> = ({
 
   const content = (
     <div
-      className={`group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 ${
+      className={`group relative overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-elevated)] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--primary-color)] hover:shadow-md ${
         horizontal ? 'flex items-center gap-4' : 'flex flex-col'
       }`}
     >
-      {IconComponent && (
-        <div
-          className="mb-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-          style={{
-            backgroundColor: 'var(--primary-50, rgba(16, 185, 129, 0.1))',
-            color: 'var(--primary-color, #10b981)',
-          }}
-        >
-          <IconComponent className="h-5 w-5" />
-        </div>
-      )}
+      <div className="flex items-start justify-between gap-3">
+        {IconComponent && (
+          <div
+            className="mb-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105"
+            style={{
+              backgroundColor: 'var(--primary-50, rgba(16, 185, 129, 0.08))',
+              color: 'var(--primary-color, #10b981)',
+            }}
+          >
+            <IconComponent className="h-4.5 w-4.5" />
+          </div>
+        )}
+        {href && (
+          <span className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 text-[var(--primary-color)]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17 17 7M7 7h10v10"/>
+            </svg>
+          </span>
+        )}
+      </div>
       <div>
-        <h3 className="font-semibold text-slate-900 group-hover:text-[var(--primary-color,#10b981)] dark:text-slate-100">
+        <h3 className="font-semibold text-[var(--text-main)] text-sm group-hover:text-[var(--primary-color)] transition-colors">
           {title}
         </h3>
         {children && (
-          <div className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+          <div className="mt-1.5 text-xs text-[var(--text-muted)] leading-relaxed">
             {children}
           </div>
         )}
@@ -58,7 +67,7 @@ export const Card: React.FC<CardProps> = ({
 
   if (href) {
     return (
-      <a href={href} className="no-underline">
+      <a href={href} className="no-underline block">
         {content}
       </a>
     );
