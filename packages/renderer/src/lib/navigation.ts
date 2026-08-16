@@ -23,12 +23,21 @@ export interface SidebarSection {
   }[];
 }
 
+export function formatNavHref(slug: string, baseUrl: string = ''): string {
+  const cleanBase = baseUrl.replace(/\/$/, '');
+  if (slug === 'index' || slug === '') {
+    return cleanBase ? `${cleanBase}/` : '/';
+  }
+  return cleanBase ? `${cleanBase}/${slug}` : `/${slug}`;
+}
+
 /**
  * Flattens the docs.json navigation structure into a linear list of pages for prev/next traversal
  */
 export function flattenNavigation(
   config: DocsConfig,
-  pagesMetadata: Record<string, { title?: string; icon?: string; tag?: string }> = {}
+  pagesMetadata: Record<string, { title?: string; icon?: string; tag?: string }> = {},
+  baseUrl: string = ''
 ): FlatNavItem[] {
   const result: FlatNavItem[] = [];
 
@@ -39,7 +48,7 @@ export function flattenNavigation(
   function resolveItem(pagePath: string, groupName?: string, tabName?: string): FlatNavItem {
     const slug = cleanSlug(pagePath);
     const meta = pagesMetadata[slug] || {};
-    const href = slug === 'index' ? '/' : `/${slug}`;
+    const href = formatNavHref(slug, baseUrl);
     const defaultTitle = slug
       .split('/')
       .pop()!
@@ -99,7 +108,8 @@ export function flattenNavigation(
 export function getSidebarSections(
   config: DocsConfig,
   currentSlug: string,
-  pagesMetadata: Record<string, { title?: string; icon?: string; tag?: string }> = {}
+  pagesMetadata: Record<string, { title?: string; icon?: string; tag?: string }> = {},
+  baseUrl: string = ''
 ): { activeTab?: NavTab; sections: SidebarSection[] } {
   const normalizedCurrent = currentSlug.replace(/^\//, '').replace(/\/$/, '') || 'index';
   const sections: SidebarSection[] = [];
@@ -143,7 +153,7 @@ export function getSidebarSections(
         return {
           title: meta.title || slug.split('/').pop()!.replace(/[-_]/g, ' '),
           slug,
-          href: slug === 'index' ? '/' : `/${slug}`,
+          href: formatNavHref(slug, baseUrl),
           icon: meta.icon,
           tag: meta.tag,
           active: slug === normalizedCurrent,
@@ -162,7 +172,7 @@ export function getSidebarSections(
         items.push({
           title: meta.title || slug.split('/').pop()!.replace(/[-_]/g, ' '),
           slug,
-          href: slug === 'index' ? '/' : `/${slug}`,
+          href: formatNavHref(slug, baseUrl),
           icon: meta.icon,
           tag: meta.tag,
           active: slug === normalizedCurrent,

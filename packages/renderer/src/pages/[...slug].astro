@@ -59,8 +59,9 @@ const Content = file.default;
 const headings = file.getHeadings ? file.getHeadings() : [];
 
 // Metadata map for titles & tags
-const flatNav = flattenNavigation(config);
-const { activeTab, sections } = getSidebarSections(config, slug);
+const baseUrl = import.meta.env.BASE_URL || '';
+const flatNav = flattenNavigation(config, {}, baseUrl);
+const { activeTab, sections } = getSidebarSections(config, slug, {}, baseUrl);
 const { prev, next } = getPrevNextNavigation(flatNav, slug);
 ---
 
