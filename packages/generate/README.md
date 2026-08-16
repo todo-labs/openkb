@@ -1,6 +1,6 @@
 # @todo-labs/openkb-generate
 
-Codebase scanner and OpenRouter-powered synthesis engine for generating Open Knowledge Format (OKF) documents.
+Codebase scanner and synthesis engine for generating Open Knowledge Format (OKF) documents with OpenRouter or a read-only OpenCode agent.
 
 ## Install
 
@@ -22,13 +22,28 @@ await generateKnowledgeBase({
 });
 ```
 
-`OPENROUTER_API_KEY` is the preferred environment variable. `GEMINI_API_KEY` is accepted as a compatibility fallback. The package uses OpenRouter's Chat Completions API.
+`OPENROUTER_API_KEY` is the preferred environment variable for the default OpenRouter provider. `GEMINI_API_KEY` is accepted as a compatibility fallback.
+
+## Agentic synthesis with OpenCode
+
+Use `provider: 'opencode'` to let an OpenCode session discover and read files before drafting each document. The embedded `openkb-docs` agent is configured read-only: file edits, shell access, web access, and external directories are denied. It must cite real repository-relative source files, and OpenKB rejects drafts with invalid or fabricated provenance.
+
+```ts
+await generateKnowledgeBase({
+  rootDir: process.cwd(),
+  outputDir: './content',
+  provider: 'opencode',
+  model: 'provider/model', // optional; otherwise uses your OpenCode configuration
+});
+```
+
+The CLI equivalent is `openkb generate --provider opencode --init`. You can also set `generate.provider` to `opencode` in `docs.json`; CLI flags take precedence. OpenCode must already be configured with an authenticated model provider.
 
 ## Current workflow
 
-The generator scans the repository, collects a prioritized context set, and synthesizes three starter concept documents: architecture, quickstart, and modules. It also updates agent pointers in `AGENTS.md` and `CLAUDE.md` and records generation state alongside the output.
+The default OpenRouter provider scans the repository, collects a prioritized context set, and synthesizes three starter concept documents: architecture, quickstart, and modules. The OpenCode provider performs its own repository exploration for each of those documents. Both update agent pointers in `AGENTS.md` and `CLAUDE.md` and record generation state alongside the output.
 
-This is a context-driven generation workflow, not yet a tool-using code agent. Treat generated files as drafts: review their claims and source links before marking them verified in OKF frontmatter.
+Treat generated files as drafts: review their claims and source links before marking them verified in OKF frontmatter.
 
 ## Exports
 

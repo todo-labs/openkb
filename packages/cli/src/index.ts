@@ -89,10 +89,11 @@ program
 
 program
   .command('generate')
-  .description('Synthesize living OKF documentation from your codebase using Gemini 3.7 Flash')
+  .description('Synthesize living OKF documentation from your codebase')
   .option('--init', 'Run initial full codebase synthesis')
   .option('--update', 'Run incremental synthesis on changed files')
-  .option('--model <model>', 'OpenRouter model ID to use', 'google/gemini-2.5-flash')
+  .option('--provider <provider>', 'Generation provider: openrouter or opencode')
+  .option('--model <model>', 'Model ID (OpenCode uses provider/model)')
   .option('-o, --output <dir>', 'Target output directory for OKF files')
   .action(async (options) => {
     try {
