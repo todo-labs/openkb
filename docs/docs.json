@@ -41,7 +41,7 @@
   },
   "navbar": {
     "links": [
-      { "label": "GitHub", "href": "https://github.com/openkb/openkb" },
+      { "label": "GitHub", "href": "https://github.com/todo-labs/openkb" },
       { "label": "Google OKF Spec", "href": "https://github.com/GoogleCloudPlatform/knowledge-catalog" }
     ],
     "primary": {
@@ -52,7 +52,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/openkb/openkb"
+      "github": "https://github.com/todo-labs/openkb"
     },
     "copyright": "© 2026 OpenKB Contributors. Released under the MIT License."
   },

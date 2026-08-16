@@ -39,8 +39,8 @@ export class OpenRouterClient {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.apiKey}`,
-        'HTTP-Referer': 'https://github.com/openkb/openkb',
-        'X-Title': 'OpenKB Knowledge Synthesizer',
+        'HTTP-Referer': 'https://github.com/todo-labs/openkb',
+        'X-Title': 'OpenKB Documentation Engine',
       },
       body: JSON.stringify({
         model: this.model,
