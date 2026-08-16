@@ -116,6 +116,31 @@ export const DocsConfigSchema = z.object({
       dark: z.string().optional(),
     })
     .default({ primary: '#10b981' }),
+  style: z
+    .object({
+      preset: z.enum(['atlas', 'terminal', 'notebook']).default('atlas'),
+      typography: z.enum(['sans', 'system', 'mono']).default('sans'),
+      density: z.enum(['compact', 'comfortable']).default('comfortable'),
+      radius: z.enum(['sharp', 'soft', 'round']).default('soft'),
+      layout: z.enum(['standard', 'wide']).default('standard'),
+      colors: z
+        .object({
+          background: z.string().optional(),
+          backgroundSubtle: z.string().optional(),
+          text: z.string().optional(),
+          textMuted: z.string().optional(),
+          border: z.string().optional(),
+          codeBackground: z.string().optional(),
+        })
+        .optional(),
+    })
+    .default({
+      preset: 'atlas',
+      typography: 'sans',
+      density: 'comfortable',
+      radius: 'soft',
+      layout: 'standard',
+    }),
   logo: z
     .object({
       light: z.string().optional(),

@@ -43,6 +43,12 @@
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --prose-size: 0.96875rem;
+    --prose-leading: 1.78;
+    --section-space: 2.75rem;
+    --control-radius: 0.5rem;
+    --card-radius: 0.6875rem;
 
     /* Native dark mode for UA controls */
     color-scheme: light dark;
@@ -72,6 +78,22 @@
     color-scheme: dark;
   }
 
+  /* Terminal is intentionally a dark, compact reference surface in every OS mode. */
+  [data-docs-style="terminal"] {
+    --bg-base: #101311;
+    --bg-subtle: #171b18;
+    --bg-elevated: #1b201d;
+    --bg-overlay: rgba(16, 19, 17, 0.92);
+    --text-main: #e8eee8;
+    --text-muted: #aab5aa;
+    --text-faint: #758075;
+    --border-color: rgba(232, 238, 232, 0.13);
+    --border-subtle: rgba(232, 238, 232, 0.07);
+    --code-bg: #090b0a;
+    --navbar-bg: rgba(16, 19, 17, 0.9);
+    color-scheme: dark;
+  }
+
   html {
     /* text-size-adjust for accessibility */
     -webkit-text-size-adjust: 100%;
@@ -89,6 +111,7 @@
     overflow-x: hidden;
     /* Smooth scroll for ToC */
     scroll-behavior: smooth;
+    font-family: var(--font-body);
   }
 }
 
@@ -100,6 +123,8 @@
   .border-primary { border-color: var(--primary-color); }
   .border-primary-subtle { border-color: var(--primary-100); }
 }
+
+.docs-shell { max-width: var(--docs-max-width); }
 
 /* ─── Scrollbars ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -119,8 +144,8 @@
 .prose {
   max-width: 100%;
   color: var(--text-main);
-  line-height: 1.8;
-  font-size: 0.9375rem;
+  line-height: var(--prose-leading);
+  font-size: var(--prose-size);
 }
 
 .prose h1 {
@@ -138,7 +163,7 @@
   font-size: clamp(1.2rem, 2.5cqi, 1.625rem);
   font-weight: 650;
   letter-spacing: -0.025em;
-  margin-top: 2.5rem;
+  margin-top: var(--section-space);
   margin-bottom: 0.75rem;
   padding-bottom: 0.625rem;
   border-bottom: 1px solid var(--border-color);
@@ -171,7 +196,7 @@
   margin-top: 1.125rem;
   margin-bottom: 1.125rem;
   color: var(--text-muted);
-  line-height: 1.8;
+  line-height: var(--prose-leading);
   text-wrap: pretty;
 }
 

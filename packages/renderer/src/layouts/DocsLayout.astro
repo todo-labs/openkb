@@ -47,7 +47,7 @@ const faviconUrl = config.favicon.startsWith('http')
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-docs-style={config.style.preset}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -75,10 +75,10 @@ const faviconUrl = config.favicon.startsWith('http')
       }
     </script>
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+  <body class="min-h-screen flex flex-col antialiased">
     <Navbar config={config} currentSlug={currentSlug} activeTab={activeTab} />
 
-    <div class="mx-auto flex w-full max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
+    <div class="docs-shell mx-auto flex w-full flex-1 px-4 sm:px-6 lg:px-8">
       <!-- Sidebar Navigation -->
       <Sidebar sections={sections} currentSlug={currentSlug} />
 

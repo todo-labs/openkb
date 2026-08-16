@@ -11,7 +11,7 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ frontmatter })
   const { status, type, generated, verified, sources } = frontmatter;
 
   const statusColors = {
-    stable: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800',
+    stable: 'bg-[var(--primary-50)] text-[var(--primary-dark)] border-[var(--primary-100)]',
     draft: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
     deprecated: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800',
   }[status || 'stable'];
@@ -22,9 +22,9 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ frontmatter })
   const verifications = Array.isArray(verified) ? verified : verified ? [verified] : [];
 
   return (
-    <div className="my-4 flex flex-wrap items-center gap-2 border-b border-slate-200 pb-4 text-xs dark:border-slate-800">
+    <div className="my-5 flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-5 text-xs">
       {/* OKF Concept Type */}
-      <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+      <span className="inline-flex items-center gap-1 rounded-[var(--control-radius)] border border-[var(--border-color)] bg-[var(--bg-subtle)] px-2 py-0.5 font-medium text-[var(--text-muted)]">
         <FileCode className="h-3 w-3" />
         {type}
       </span>
@@ -37,9 +37,9 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ frontmatter })
 
       {/* Generator Actor */}
       {formattedGenerated && (
-        <span className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+        <span className="inline-flex items-center gap-1 rounded-[var(--control-radius)] border border-[var(--border-color)] bg-[var(--bg-elevated)] px-2 py-0.5 text-[var(--text-muted)]">
           <Bot className="h-3 w-3 text-purple-500" />
-          <span>Synthesized by <strong className="font-medium text-slate-900 dark:text-slate-200">{formattedGenerated.name}</strong></span>
+          <span>Synthesized by <strong className="font-medium text-[var(--text-main)]">{formattedGenerated.name}</strong></span>
         </span>
       )}
 
@@ -53,7 +53,7 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ frontmatter })
 
       {/* Source count */}
       {sources && sources.length > 0 && (
-        <span className="inline-flex items-center gap-1 text-slate-400 dark:text-slate-500">
+        <span className="inline-flex items-center gap-1 text-[var(--text-faint)]">
           <span>•</span>
           <span>{sources.length} source {sources.length === 1 ? 'file' : 'files'}</span>
         </span>

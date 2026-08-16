@@ -25,6 +25,13 @@ export function initCommand(targetDir: string = '.'): void {
     colors: {
       primary: '#10b981',
     },
+    style: {
+      preset: 'atlas',
+      typography: 'sans',
+      density: 'comfortable',
+      radius: 'soft',
+      layout: 'standard',
+    },
     navigation: {
       tabs: [
         {

@@ -10,6 +10,30 @@ tags: [components, mdx, ui, gallery]
 
 OpenKB provides a comprehensive library of built-in components that are automatically available in all `.mdx` files without requiring import statements.
 
+## Visual system
+
+OpenKB sites start from an intentional reading environment, then let each project tune the parts that change the experience. Add this to `docs.json`:
+
+```json
+{
+  "colors": { "primary": "#0f766e" },
+  "style": {
+    "preset": "atlas",
+    "typography": "sans",
+    "density": "comfortable",
+    "radius": "soft",
+    "layout": "standard",
+    "colors": {
+      "background": "#fcfcfb",
+      "backgroundSubtle": "#f5f5f2",
+      "text": "#1c1c1a"
+    }
+  }
+}
+```
+
+Choose `terminal` for dense API or operations docs, or `notebook` for warmer explanatory guides. Use `compact` density and `wide` layout for reference material; the remaining tokens are optional overrides rather than a second theme API.
+
 ## Cards and Card Groups
 
 <CardGroup cols={2}>
@@ -76,7 +100,7 @@ Do not expose private API keys in client-side bundles or public repositories.
   <Accordion title="How does static search work?">
     Search is powered by Pagefind, which indexes all rendered HTML at build time and executes queries entirely in the client browser with zero backend server overhead.
   </Accordion>
-  <Accordion title="Can I customize the primary brand color?">
-    Yes, edit \`colors.primary\` in \`docs.json\` with any hex color code. OpenKB automatically generates matching light and dark theme shades.
+  <Accordion title="Can I customize the entire documentation theme?">
+    Yes. Set \`style.preset\` to \`atlas\`, \`terminal\`, or \`notebook\`, then tailor typography, density, radius, layout, and individual surface tokens in \`docs.json\`. \`colors.primary\` remains your brand accent.
   </Accordion>
 </AccordionGroup>

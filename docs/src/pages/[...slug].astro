@@ -73,11 +73,11 @@ const { prev, next } = getPrevNextNavigation(flatNav, slug);
 >
   {frontmatter.title && (
     <div class="mb-4">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)]">
         {frontmatter.title}
       </h1>
       {frontmatter.description && (
-        <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">
+        <p class="mt-2 text-lg text-[var(--text-muted)]">
           {frontmatter.description}
         </p>
       )}

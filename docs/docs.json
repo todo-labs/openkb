@@ -8,6 +8,13 @@
     "light": "#34d399",
     "dark": "#059669"
   },
+  "style": {
+    "preset": "atlas",
+    "typography": "sans",
+    "density": "comfortable",
+    "radius": "soft",
+    "layout": "standard"
+  },
   "favicon": "/favicon.svg",
   "appearance": {
     "default": "system",
