@@ -1,0 +1,23 @@
+{
+  "name": "@openkb/generate",
+  "version": "0.1.0",
+  "description": "Living codebase documentation synthesis engine powered by Gemini 3.7 Flash and Google OKF",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3"
+  }
+}
