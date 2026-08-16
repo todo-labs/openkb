@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@openkb/renderer": "workspace:*"
+    "@todo-labs/openkb-renderer": "workspace:*"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.0.8",

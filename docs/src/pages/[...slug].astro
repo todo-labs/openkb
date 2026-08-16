@@ -1,12 +1,12 @@
 ---
-import DocsLayout from '@openkb/renderer/layouts/DocsLayout.astro';
+import DocsLayout from '@todo-labs/openkb-renderer/layouts/DocsLayout.astro';
 import {
   loadDocsConfig,
   flattenNavigation,
   getSidebarSections,
   getPrevNextNavigation,
   ProvenanceBadge,
-} from '@openkb/renderer';
+} from '@todo-labs/openkb-renderer';
 import {
   Card,
   CardGroup,
@@ -27,7 +27,7 @@ import {
   ResponseField,
   Expandable,
   Frame,
-} from '@openkb/renderer';
+} from '@todo-labs/openkb-renderer';
 
 export async function getStaticPaths() {
   const pages = import.meta.glob('../../content/**/*.{md,mdx}', { eager: true });

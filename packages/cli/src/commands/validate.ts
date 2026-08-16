@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { DocsConfigSchema, OkfFrontmatterSchema } from '@openkb/generate';
+import { DocsConfigSchema, OkfFrontmatterSchema } from '@todo-labs/openkb-generate';
 
 export function validateCommand(): void {
   const root = process.cwd();

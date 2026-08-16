@@ -1,4 +1,4 @@
-import { generateKnowledgeBase } from '@openkb/generate';
+import { generateKnowledgeBase } from '@todo-labs/openkb-generate';
 
 export async function generateCommand(options: {
   init?: boolean;

@@ -167,17 +167,17 @@ Switch between package managers or operating systems effortlessly:
 <Tabs>
   <Tab title="pnpm">
 \`\`\`bash
-pnpm add @openkb/cli
+pnpm add @todo-labs/openkb
 \`\`\`
   </Tab>
   <Tab title="npm">
 \`\`\`bash
-npm install -g @openkb/cli
+npm install -g @todo-labs/openkb
 \`\`\`
   </Tab>
   <Tab title="yarn">
 \`\`\`bash
-yarn add @openkb/cli
+yarn add @todo-labs/openkb
 \`\`\`
   </Tab>
 </Tabs>

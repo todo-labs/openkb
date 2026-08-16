@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { loadDocsConfig } from '@openkb/renderer';
+import { loadDocsConfig } from '@todo-labs/openkb-renderer';
 
 export const prerender = true;
 

@@ -17,7 +17,7 @@ importers:
 
   docs:
     dependencies:
-      '@openkb/renderer':
+      '@todo-labs/openkb-renderer':
         specifier: workspace:*
         version: link:../packages/renderer
     devDependencies:
@@ -57,7 +57,7 @@ importers:
 
   packages/cli:
     dependencies:
-      '@openkb/generate':
+      '@todo-labs/openkb-generate':
         specifier: workspace:*
         version: link:../generate
       commander:

@@ -1,5 +1,5 @@
 {
-  "name": "@openkb/cli",
+  "name": "@todo-labs/openkb",
   "version": "0.1.0",
   "description": "CLI tool for OpenKB - Open-Source AI-Native Documentation Engine",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@openkb/generate": "workspace:*",
+    "@todo-labs/openkb-generate": "workspace:*",
     "commander": "^13.1.0",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",

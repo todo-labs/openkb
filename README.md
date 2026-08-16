@@ -24,28 +24,28 @@
 
 ```bash
 # Initialize a new documentation project
-npx @openkb/cli init my-docs
+npx @todo-labs/openkb init my-docs
 
 # Navigate to project
 cd my-docs
 
 # Start local live-reloading dev server
-npx @openkb/cli dev
+npx @todo-labs/openkb dev
 
 # Build for static production export
-npx @openkb/cli build
+npx @todo-labs/openkb build
 
 # Synthesize living docs from your codebase with AI
-npx @openkb/cli generate --init
+npx @todo-labs/openkb generate --init
 ```
 
 ---
 
 ## Monorepo Packages
 
-- **`@openkb/cli`** (`packages/cli`): Command-line tool to initialize, develop, build, and generate docs.
-- **`@openkb/renderer`** (`packages/renderer`): Astro-powered static documentation generator and MDX component library.
-- **`@openkb/generate`** (`packages/generate`): Codebase scanner and OpenRouter AI synthesis engine targeting Gemini 3.7 Flash.
+- **`@todo-labs/openkb`** (`packages/cli`): Command-line tool to initialize, develop, build, and generate docs.
+- **`@todo-labs/openkb-renderer`** (`packages/renderer`): Astro-powered static documentation generator and MDX component library.
+- **`@todo-labs/openkb-generate`** (`packages/generate`): Codebase scanner and OpenRouter AI synthesis engine targeting Gemini 3.7 Flash.
 
 ---
 

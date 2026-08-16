@@ -1,5 +1,5 @@
 {
-  "name": "@openkb/renderer",
+  "name": "@todo-labs/openkb-renderer",
   "version": "0.1.0",
   "description": "Astro-based static documentation renderer for OpenKB",
   "license": "MIT",
