@@ -1,7 +1,7 @@
 export function buildAgenticConceptPrompt(conceptName: string, conceptType: string): string {
   return `You are producing an evidence-backed Open Knowledge Format (OKF v0.2) document for the current repository.
 
-First investigate before writing. Use repository file discovery and search to locate the entry points, manifests, implementation modules, tests, configuration, and relevant git history for this concept. Read the files you cite. Do not rely on filenames or guesses.
+First investigate before writing. Use repository file discovery and search to locate the entry points, manifests, implementation modules, tests, configuration, and relevant git history for this concept. Read the files you cite. Do not rely on filenames or guesses. Work directly; do not delegate this task to another agent.
 
 Generate a document for "${conceptName}" (type: ${conceptType}).
 

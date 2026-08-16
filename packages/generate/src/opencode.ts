@@ -44,7 +44,10 @@ export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions):
           mode: 'primary',
           model: OPENKB_MODEL,
           description: 'Read-only repository research and evidence-backed OpenKB documentation.',
-          maxSteps: 40,
+          // Keep research in this explicitly permissioned agent; do not delegate
+          // to OpenCode's ambient subagents with different tool policies.
+          maxSteps: 12,
+          tools: { task: false },
           permission: {
             edit: 'deny',
             bash: 'deny',
@@ -68,6 +71,7 @@ export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions):
       query: { directory: options.rootDir },
       body: {
         agent: 'openkb-docs',
+        tools: { task: false },
         parts: [{ type: 'text', text: buildAgenticConceptPrompt(options.title, options.type) }],
       },
     });
