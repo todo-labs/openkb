@@ -1,0 +1,28 @@
+{
+  "name": "@openkb/cli",
+  "version": "0.1.0",
+  "description": "CLI tool for OpenKB - Open-Source AI-Native Documentation Engine",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "openkb": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openkb/generate": "workspace:*",
+    "commander": "^13.1.0",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3"
+  }
+}
