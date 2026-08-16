@@ -2,6 +2,9 @@ import { createOpencode } from '@opencode-ai/sdk';
 import type { Part } from '@opencode-ai/sdk';
 import { buildAgenticConceptPrompt } from './prompts.js';
 
+/** OpenKB's fixed cost-efficient model for repository research and synthesis. */
+const OPENKB_MODEL = 'openrouter/deepseek/deepseek-v4-flash';
+
 export interface OpenCodeSynthesisOptions {
   rootDir: string;
   title: string;
@@ -30,6 +33,7 @@ export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions):
     config: {
       // OpenCode supplies the agent loop and tools; OpenRouter is the sole model provider.
       enabled_providers: ['openrouter'],
+      model: OPENKB_MODEL,
       provider: {
         openrouter: {
           options: { apiKey: '{env:OPENROUTER_API_KEY}' },
@@ -38,6 +42,7 @@ export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions):
       agent: {
         'openkb-docs': {
           mode: 'primary',
+          model: OPENKB_MODEL,
           description: 'Read-only repository research and evidence-backed OpenKB documentation.',
           maxSteps: 40,
           permission: {
