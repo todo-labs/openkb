@@ -148,8 +148,7 @@ export const DocsConfigSchema = z.object({
     .default({ version: '0.2', bundleRoot: './content', showProvenance: true }),
   generate: z
     .object({
-      provider: z.enum(['openrouter', 'opencode']).default('openrouter'),
-      model: z.string().default('google/gemini-2.5-flash'),
+      model: z.string().optional(),
       outputDir: z.string().default('./openwiki'),
     })
     .optional(),

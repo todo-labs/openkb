@@ -42,16 +42,16 @@ Compiles documentation into 100% static HTML/CSS/JS and builds the Pagefind sear
 
 ## `openkb generate`
 
-Synthesizes living OKF concept documentation from codebase AST and git history using Gemini 3.7 Flash.
+Synthesizes evidence-backed OKF concept documentation with a read-only OpenCode research agent.
 
 <ParamField query="init" type="boolean" default="false">
   Performs full initial codebase analysis and documentation creation.
 </ParamField>
 
 <ParamField query="update" type="boolean" default="false">
-  Performs incremental documentation update based on Git diffs.
+  Refreshes generated documentation with fresh repository research.
 </ParamField>
 
-<ParamField query="model" type="string" default="google/gemini-2.5-flash">
-  OpenRouter model identifier for synthesis.
+<ParamField query="model" type="string">
+  Optional OpenCode model identifier in \`provider/model\` format.
 </ParamField>

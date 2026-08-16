@@ -1,7 +1,7 @@
 {
   "name": "@todo-labs/openkb-generate",
   "version": "0.1.0",
-  "description": "Living codebase documentation synthesis engine powered by Gemini 3.7 Flash and Google OKF",
+  "description": "Agentic codebase documentation synthesis engine powered by OpenCode and Google OKF",
   "license": "MIT",
   "type": "module",
   "publishConfig": {

@@ -1,26 +1,26 @@
 ---
 type: Concept
 title: AI Living Codebase Synthesis
-description: How OpenKB uses Gemini 3.7 Flash to automatically generate and maintain codebase docs.
+description: How OpenKB uses a read-only OpenCode agent to generate evidence-backed codebase docs.
 status: stable
-tags: [ai, openrouter, gemini, synthesis, openwiki]
+tags: [ai, opencode, synthesis, provenance]
 ---
 
 # AI Living Codebase Synthesis
 
-Inspired by LangChain's OpenWiki, OpenKB integrates an automated AI synthesis engine that scans your repository, extracts architectural context, and writes Google OKF-compliant concept documents.
+OpenKB uses a read-only OpenCode research session to inspect your repository before writing Google OKF-compliant concept documents.
 
 ## How It Works
 
 <Steps>
-  <Step title="1. Context & Evidence Gathering">
-    OpenKB walks your file tree, extracts AST structures from primary entry files, and summarizes recent Git commit histories.
+  <Step title="1. Repository Research">
+    OpenCode discovers and reads relevant manifests, entry points, implementation modules, tests, and configuration for each concept.
   </Step>
-  <Step title="2. Gemini 3.7 Flash Synthesis">
-    The gathered context is passed to **Google Gemini 3.7 Flash** (via OpenRouter) with strict OKF v0.2 system constraints.
+  <Step title="2. Read-Only Agentic Synthesis">
+    The embedded agent can search and read the repository but cannot edit files, run shell commands, access the web, or leave the project directory.
   </Step>
-  <Step title="3. OKF Concept Generation">
-    Concept documents are written directly to \`content/\` (or \`openwiki/\`) with YAML frontmatter.
+  <Step title="3. Provenance Validation">
+    Concept documents are accepted only when their YAML frontmatter is valid and every cited source path exists in the repository.
   </Step>
   <Step title="4. Agent Pointer Synchronization">
     OpenKB injects delimited pointers into \`AGENTS.md\` and \`CLAUDE.md\` so coding agents (Cursor, Claude Code, Copilot) automatically discover the knowledge base.
@@ -29,13 +29,12 @@ Inspired by LangChain's OpenWiki, OpenKB integrates an automated AI synthesis en
 
 ## Running AI Synthesis
 
-Set your OpenRouter API key and execute the CLI generate command:
+Configure an authenticated model provider in OpenCode, then execute the CLI generate command:
 
 ```bash
-export OPENROUTER_API_KEY="sk-or-v1-..."
 openkb generate --init
 ```
 
-<Callout type="tip" title="Incremental Updates">
-Use \`openkb generate --update\` in CI/CD pipelines (e.g. GitHub Actions) to incrementally update only the documentation affected by new git commits.
+<Callout type="tip" title="Model selection">
+Use \`openkb generate --model provider/model --init\` to override the model configured in OpenCode for one generation run.
 </Callout>

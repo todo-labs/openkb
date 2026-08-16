@@ -13,7 +13,7 @@
 
 - **🎨 Modern Developer UX**: Full suite of interactive MDX components (`<Card>`, `<Tabs>`, `<Accordion>`, `<Steps>`, `<CodeGroup>`, `<Callout>`, `<ParamField>`, `<ResponseField>`).
 - **📐 Google OKF v0.2 Spec**: Uses the Open Knowledge Format with YAML frontmatter, trust & provenance tracking, and concept knowledge graphs.
-- **🤖 Living Codebase Synthesis**: Auto-generates and incrementally maintains codebase documentation using **Gemini 3.7 Flash** (via OpenRouter) inspired by LangChain OpenWiki.
+- **🤖 Agentic Codebase Synthesis**: A read-only OpenCode agent explores the repository, grounds claims in source files, and generates evidence-backed OKF documents.
 - **⚡ 100% Pure Static Output**: Powered by Astro with zero runtime server requirements. Deploy anywhere (GitHub Pages, Cloudflare Pages, Vercel, Netlify, S3).
 - **🔍 Zero-Server Static Search**: Built-in instant `Cmd+K` search powered by Pagefind.
 - **🧠 Agent-First Discoverability**: Auto-generates `/llms.txt`, `/llms-full.txt`, and manages agent pointers in `AGENTS.md` and `CLAUDE.md`.
@@ -45,7 +45,7 @@ npx @todo-labs/openkb generate --init
 
 - **`@todo-labs/openkb`** (`packages/cli`): Command-line tool to initialize, develop, build, and generate docs.
 - **`@todo-labs/openkb-renderer`** (`packages/renderer`): Astro-powered static documentation generator and MDX component library.
-- **`@todo-labs/openkb-generate`** (`packages/generate`): Codebase scanner and OpenRouter AI synthesis engine targeting Gemini 3.7 Flash.
+- **`@todo-labs/openkb-generate`** (`packages/generate`): Read-only OpenCode agent for evidence-backed codebase synthesis.
 
 ---
 

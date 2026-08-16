@@ -1,7 +1,7 @@
 {
   "$schema": "https://openkb.dev/schema.json",
   "name": "OpenKB Documentation",
-  "description": "AI-Native Open-Source Documentation Engine powered by Google OKF and Gemini 3.7 Flash",
+  "description": "AI-Native Open-Source Documentation Engine powered by Google OKF and OpenCode",
   "theme": "emerald",
   "colors": {
     "primary": "#10b981",

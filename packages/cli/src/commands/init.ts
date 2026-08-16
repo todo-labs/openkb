@@ -108,7 +108,7 @@ Every document in OpenKB is formatted as an Open Knowledge Format concept docume
     Rich interactive components like Tabs, CodeGroups, Accordions, and Callouts out of the box.
   </Card>
   <Card title="AI Living Synthesis" icon="bot" href="/quickstart">
-    Auto-synthesizes and updates docs directly from your codebase with Gemini 3.7 Flash.
+    Researches your codebase with a read-only OpenCode agent and creates source-grounded docs.
   </Card>
   <Card title="100% Static Export" icon="zap">
     Pure static HTML/JS output deployable anywhere (GitHub Pages, Cloudflare Pages, S3).
