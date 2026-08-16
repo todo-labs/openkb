@@ -4,8 +4,21 @@
   "description": "Astro-based static documentation renderer for OpenKB",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/todo-labs/openkb.git",
+    "directory": "packages/renderer"
+  },
+  "homepage": "https://todo-labs.github.io/openkb/",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

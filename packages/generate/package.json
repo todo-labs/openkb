@@ -4,8 +4,20 @@
   "description": "Living codebase documentation synthesis engine powered by Gemini 3.7 Flash and Google OKF",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/todo-labs/openkb.git",
+    "directory": "packages/generate"
+  },
+  "homepage": "https://todo-labs.github.io/openkb/",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

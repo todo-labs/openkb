@@ -4,11 +4,23 @@
   "description": "CLI tool for OpenKB - Open-Source AI-Native Documentation Engine",
   "license": "MIT",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/todo-labs/openkb.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://todo-labs.github.io/openkb/",
   "bin": {
     "openkb": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
