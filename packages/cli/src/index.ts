@@ -92,7 +92,6 @@ program
   .description('Synthesize living OKF documentation from your codebase')
   .option('--init', 'Run initial full codebase synthesis')
   .option('--update', 'Refresh existing generated documents with fresh repository research')
-  .option('--model <model>', 'OpenCode model ID in provider/model format')
   .option('-o, --output <dir>', 'Target output directory for OKF files')
   .action(async (options) => {
     try {

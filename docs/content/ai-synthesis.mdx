@@ -29,12 +29,13 @@ OpenKB uses a read-only OpenCode research session to inspect your repository bef
 
 ## Running AI Synthesis
 
-Configure an authenticated model provider in OpenCode, then execute the CLI generate command:
+Set an OpenRouter API key, then execute the CLI generate command. OpenCode provides the agentic repository research interface; OpenRouter provides model access:
 
 ```bash
+export OPENROUTER_API_KEY="sk-or-v1-..."
 openkb generate --init
 ```
 
-<Callout type="tip" title="Model selection">
-Use \`openkb generate --model provider/model --init\` to override the model configured in OpenCode for one generation run.
+<Callout type="tip" title="Single model-provider path">
+OpenKB restricts its OpenCode session to OpenRouter. This keeps credentials and model access consistent without exposing a separate OpenCode model configuration surface.
 </Callout>

@@ -6,16 +6,6 @@ export interface OpenCodeSynthesisOptions {
   rootDir: string;
   title: string;
   type: string;
-  model?: string;
-}
-
-function parseModel(model?: string): { providerID: string; modelID: string } | undefined {
-  if (!model) return undefined;
-  const separator = model.indexOf('/');
-  if (separator <= 0 || separator === model.length - 1) {
-    throw new Error('OpenCode models must use the provider/model format.');
-  }
-  return { providerID: model.slice(0, separator), modelID: model.slice(separator + 1) };
 }
 
 function textFrom(parts: Part[]): string {
@@ -32,10 +22,19 @@ function textFrom(parts: Part[]): string {
  * repository or invoking a shell.
  */
 export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions): Promise<string> {
-  const model = parseModel(options.model);
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error('Missing OPENROUTER_API_KEY. OpenKB uses OpenRouter for model access.');
+  }
+
   const { client, server } = await createOpencode({
     config: {
-      ...(options.model ? { model: options.model } : {}),
+      // OpenCode supplies the agent loop and tools; OpenRouter is the sole model provider.
+      enabled_providers: ['openrouter'],
+      provider: {
+        openrouter: {
+          options: { apiKey: '{env:OPENROUTER_API_KEY}' },
+        },
+      },
       agent: {
         'openkb-docs': {
           mode: 'primary',
@@ -64,7 +63,6 @@ export async function synthesizeWithOpenCode(options: OpenCodeSynthesisOptions):
       query: { directory: options.rootDir },
       body: {
         agent: 'openkb-docs',
-        ...(model ? { model } : {}),
         parts: [{ type: 'text', text: buildAgenticConceptPrompt(options.title, options.type) }],
       },
     });

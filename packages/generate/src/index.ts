@@ -8,7 +8,6 @@ import { validateGeneratedOkf } from './validation.js';
 export interface GenerateOptions {
   rootDir?: string;
   outputDir?: string;
-  model?: string;
   mode?: 'init' | 'update';
 }
 
@@ -39,7 +38,6 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
         rootDir,
         title: concept.title,
         type: concept.type,
-        model: options.model,
       });
 
       const targetPath = path.join(outputDir, `${concept.name}.mdx`);

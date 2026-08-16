@@ -148,7 +148,6 @@ export const DocsConfigSchema = z.object({
     .default({ version: '0.2', bundleRoot: './content', showProvenance: true }),
   generate: z
     .object({
-      model: z.string().optional(),
       outputDir: z.string().default('./openwiki'),
     })
     .optional(),

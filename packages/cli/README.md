@@ -27,7 +27,7 @@ openkb generate --init           # create starter knowledge documents
 openkb generate --update         # run the current synthesis workflow
 ```
 
-`generate` uses a read-only OpenCode agent. Configure an authenticated model in OpenCode, then use `--model <provider/model>` when you want to override it. Use `--output <directory>` to change the generated document directory.
+`generate` uses a read-only OpenCode agent with OpenRouter as its only model provider. Set `OPENROUTER_API_KEY` before running it. Use `--output <directory>` to change the generated document directory.
 
 ## Configure the site
 
