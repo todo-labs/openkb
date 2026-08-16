@@ -1,0 +1,89 @@
+name: Publish packages to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Package to publish
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - cli
+          - generate
+          - renderer
+      tag:
+        description: npm dist-tag
+        required: true
+        default: latest
+        type: string
+      dry_run:
+        description: Validate the publish command without uploading packages
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish ${{ inputs.package }}
+    runs-on: ubuntu-latest
+    environment: npm
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_TAG: ${{ inputs.tag }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and type-check packages
+        run: pnpm typecheck
+
+      - name: Publish selected package
+        if: inputs.package != 'all'
+        env:
+          PACKAGE: ${{ inputs.package }}
+        run: |
+          case "$PACKAGE" in
+            cli) TARGET='@todo-labs/openkb' ;;
+            generate) TARGET='@todo-labs/openkb-generate' ;;
+            renderer) TARGET='@todo-labs/openkb-renderer' ;;
+          esac
+
+          EXTRA_ARGS=()
+          if [ "$DRY_RUN" = "true" ]; then
+            EXTRA_ARGS+=(--dry-run)
+          fi
+
+          pnpm --filter "$TARGET" publish --no-git-checks --access public --tag "$NPM_TAG" "${EXTRA_ARGS[@]}"
+
+      - name: Publish all packages in dependency order
+        if: inputs.package == 'all'
+        run: |
+          EXTRA_ARGS=()
+          if [ "$DRY_RUN" = "true" ]; then
+            EXTRA_ARGS+=(--dry-run)
+          fi
+
+          pnpm --filter @todo-labs/openkb-generate publish --no-git-checks --access public --tag "$NPM_TAG" "${EXTRA_ARGS[@]}"
+          pnpm --filter @todo-labs/openkb-renderer publish --no-git-checks --access public --tag "$NPM_TAG" "${EXTRA_ARGS[@]}"
+          pnpm --filter @todo-labs/openkb publish --no-git-checks --access public --tag "$NPM_TAG" "${EXTRA_ARGS[@]}"
