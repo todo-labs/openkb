@@ -1,0 +1,63 @@
+---
+type: Concept
+title: Google Open Knowledge Format (OKF v0.2)
+description: Understanding the vendor-neutral OKF specification for agent-readable documentation.
+status: stable
+tags: [okf, google, standard, metadata, provenance]
+sources:
+  - uri: "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"
+    author: "process:google-spec"
+---
+
+# Google Open Knowledge Format (OKF v0.2)
+
+The **Open Knowledge Format (OKF)** is an open specification introduced by Google Cloud to formalize how organizational and codebase knowledge is structured, packaged, and traversed by AI agents.
+
+## Core Principles
+
+1. **Human & Machine Co-Readability**: Plain Markdown files with standard YAML frontmatter blocks.
+2. **Deterministic Context Retrieval**: Standardized fields (`type`, `tags`, `sources`, `generated`, `verified`) allow AI agents to navigate knowledge without hallucinations.
+3. **Graph Interoperability**: Hyperlinks between concept files form a queryable directed graph.
+
+## Frontmatter Example
+
+```yaml
+---
+type: Module
+title: "Authentication Service"
+description: "OAuth2 and JWT token lifecycle management."
+tags: [auth, security, tokens]
+status: stable
+stale_after: 2026-12-31T23:59:59Z
+
+sources:
+  - uri: "src/auth/service.ts"
+    author: "process:git-scanner"
+    last_modified: 2026-08-16T12:00:00Z
+
+generated:
+  by: "openkb/gemini-3.7-flash"
+  at: "2026-08-16T14:30:00Z"
+
+verified:
+  - by: "human:lead-architect"
+    at: "2026-08-16T16:00:00Z"
+---
+```
+
+## Supported Concept Types
+
+<AccordionGroup>
+  <Accordion title="Architecture">
+    High-level system topology, component interactions, and data flow patterns across services.
+  </Accordion>
+  <Accordion title="Module">
+    Detailed documentation of a specific package, library, or source code module.
+  </Accordion>
+  <Accordion title="Workflow">
+    Step-by-step developer guides, operational runbooks, or deployment recipes.
+  </Accordion>
+  <Accordion title="API">
+    REST, GraphQL, or RPC interface documentation with parameters and response models.
+  </Accordion>
+</AccordionGroup>

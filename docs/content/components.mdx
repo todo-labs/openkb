@@ -1,0 +1,82 @@
+---
+type: Concept
+title: MDX Component Suite
+description: Complete gallery of interactive, prebuilt MDX components available in OpenKB.
+status: stable
+tags: [components, mdx, ui, gallery]
+---
+
+# MDX Component Suite
+
+OpenKB provides a comprehensive library of built-in components that are automatically available in all `.mdx` files without requiring import statements.
+
+## Cards and Card Groups
+
+<CardGroup cols={2}>
+  <Card title="Interactive Card" icon="sparkles" href="/quickstart">
+    Clickable card container supporting Lucide icons, hover elevation, and custom links.
+  </Card>
+  <Card title="Documentation Link" icon="file-text" href="/okf-spec">
+    Structured container for organizing links across documentation categories.
+  </Card>
+</CardGroup>
+
+## Synchronized Tabs
+
+<Tabs>
+  <Tab title="TypeScript">
+```typescript
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+```
+  </Tab>
+  <Tab title="Python">
+```python
+class UserProfile:
+    id: str
+    name: str
+    email: str
+```
+  </Tab>
+  <Tab title="Go">
+```go
+type UserProfile struct {
+    ID    string `json:"id"`
+    Name  string `json:"name"`
+    Email string `json:"email"`
+}
+```
+  </Tab>
+</Tabs>
+
+## Callouts & Semantic Alerts
+
+<Note title="Informational Note">
+This is a standard informational callout used for background context.
+</Note>
+
+<Tip title="Pro Tip">
+Use keyboard shortcut **Cmd + K** (or **Ctrl + K**) to open static instant search.
+</Tip>
+
+<Warning title="Action Required">
+Ensure your environment variables are configured before running build.
+</Warning>
+
+<Danger title="Critical Warning">
+Do not expose private API keys in client-side bundles or public repositories.
+</Danger>
+
+## Accordions and Disclosures
+
+<AccordionGroup>
+  <Accordion title="How does static search work?">
+    Search is powered by Pagefind, which indexes all rendered HTML at build time and executes queries entirely in the client browser with zero backend server overhead.
+  </Accordion>
+  <Accordion title="Can I customize the primary brand color?">
+    Yes, edit \`colors.primary\` in \`docs.json\` with any hex color code. OpenKB automatically generates matching light and dark theme shades.
+  </Accordion>
+</AccordionGroup>

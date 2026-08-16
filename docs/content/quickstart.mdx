@@ -1,0 +1,65 @@
+---
+type: Workflow
+title: Quickstart Guide
+description: Learn how to set up, build, and deploy your OpenKB documentation in under 3 minutes.
+status: stable
+tags: [setup, cli, installation, deployment]
+sources:
+  - uri: "packages/cli/src/index.ts"
+    author: "process:cli-builder"
+---
+
+# Quickstart Guide
+
+Get up and running with OpenKB using the official CLI.
+
+## Installation
+
+Install `@openkb/cli` globally or use it directly via `npx`:
+
+<Tabs>
+  <Tab title="pnpm">
+```bash
+pnpm add -g @openkb/cli
+```
+  </Tab>
+  <Tab title="npm">
+```bash
+npm install -g @openkb/cli
+```
+  </Tab>
+  <Tab title="yarn">
+```bash
+yarn global add @openkb/cli
+```
+  </Tab>
+</Tabs>
+
+## Step-by-Step Workflow
+
+<Steps>
+  <Step title="Initialize a new project">
+    Run the `init` command in your terminal to generate starter files and configuration:
+```bash
+openkb init my-docs
+cd my-docs
+```
+  </Step>
+  <Step title="Start the live preview server">
+    Launch the Astro development server with instant hot-reloading:
+```bash
+openkb dev
+```
+    Open [http://localhost:3000](http://localhost:3000) in your browser to preview your documentation.
+  </Step>
+  <Step title="Build static export">
+    Generate production-ready static assets in `./dist`:
+```bash
+openkb build
+```
+  </Step>
+</Steps>
+
+<Callout type="check" title="Deployment Ready">
+The generated `./dist` folder contains pure static HTML, CSS, JavaScript, and a prebuilt Pagefind search index. You can deploy it to Cloudflare Pages, GitHub Pages, Vercel, Netlify, or AWS S3.
+</Callout>

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://openkb.dev/schema.json",
+  "name": "OpenKB Documentation",
+  "description": "AI-Native Open-Source Documentation Engine powered by Google OKF and Gemini 3.7 Flash",
+  "theme": "emerald",
+  "colors": {
+    "primary": "#10b981",
+    "light": "#34d399",
+    "dark": "#059669"
+  },
+  "favicon": "/favicon.svg",
+  "appearance": {
+    "default": "system",
+    "strict": false
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["index", "quickstart"]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": ["okf-spec", "components", "ai-synthesis"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "CLI & SDK",
+            "pages": ["api-reference"]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      { "label": "GitHub", "href": "https://github.com/openkb/openkb" },
+      { "label": "Google OKF Spec", "href": "https://github.com/GoogleCloudPlatform/knowledge-catalog" }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "/quickstart"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/openkb/openkb"
+    },
+    "copyright": "© 2026 OpenKB Contributors. Released under the MIT License."
+  },
+  "okf": {
+    "version": "0.2",
+    "bundleRoot": "./content",
+    "showProvenance": true
+  }
+}
