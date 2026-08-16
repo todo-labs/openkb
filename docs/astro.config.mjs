@@ -7,6 +7,7 @@ export default defineConfig({
   output: 'static',
   site: process.env.SITE_URL || 'https://todo-labs.github.io',
   base: process.env.BASE_PATH || (process.env.GITHUB_PAGES ? '/openkb' : '/'),
+  trailingSlash: 'always',
   integrations: [
     react(),
     tailwind({

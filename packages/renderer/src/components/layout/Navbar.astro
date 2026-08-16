@@ -13,6 +13,11 @@ const { config, currentSlug, activeTab } = Astro.props;
 const hasTabs = config.navigation.tabs && config.navigation.tabs.length > 0;
 const baseUrl = import.meta.env.BASE_URL || '/';
 const homeHref = config.logo?.href || baseUrl;
+const primaryHref = config.navbar?.primary?.href
+  ? (config.navbar.primary.href.startsWith('http')
+      ? config.navbar.primary.href
+      : formatNavHref(config.navbar.primary.href, baseUrl))
+  : undefined;
 ---
 
 <header id="site-header" class="site-header">
@@ -108,7 +113,7 @@ const homeHref = config.logo?.href || baseUrl;
 
       <!-- Primary CTA -->
       {config.navbar?.primary && (
-        <a href={config.navbar.primary.href} class="cta-btn">
+        <a href={primaryHref} class="cta-btn">
           {config.navbar.primary.label}
         </a>
       )}

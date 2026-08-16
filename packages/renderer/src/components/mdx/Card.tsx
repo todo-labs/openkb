@@ -65,9 +65,17 @@ export const Card: React.FC<CardProps> = ({
     </div>
   );
 
-  if (href) {
+  let targetHref = href;
+  if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/openkb')) {
+      const clean = href.replace(/^\//, '').replace(/\/$/, '');
+      targetHref = clean ? `/openkb/${clean}/` : '/openkb/';
+    }
+  }
+
+  if (targetHref) {
     return (
-      <a href={href} className="no-underline block">
+      <a href={targetHref} className="no-underline block">
         {content}
       </a>
     );

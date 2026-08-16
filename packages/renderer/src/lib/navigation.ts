@@ -25,10 +25,11 @@ export interface SidebarSection {
 
 export function formatNavHref(slug: string, baseUrl: string = ''): string {
   const cleanBase = baseUrl.replace(/\/$/, '');
-  if (slug === 'index' || slug === '') {
+  const cleanSlug = slug.replace(/^\//, '').replace(/\/$/, '');
+  if (cleanSlug === 'index' || cleanSlug === '') {
     return cleanBase ? `${cleanBase}/` : '/';
   }
-  return cleanBase ? `${cleanBase}/${slug}` : `/${slug}`;
+  return cleanBase ? `${cleanBase}/${cleanSlug}/` : `/${cleanSlug}/`;
 }
 
 /**
