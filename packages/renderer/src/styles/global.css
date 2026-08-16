@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-color: #10b981;
+    --primary-light: #34d399;
+    --primary-dark: #059669;
+    --primary-50: rgba(16, 185, 129, 0.08);
+    --primary-100: rgba(16, 185, 129, 0.16);
+    --primary-500: #10b981;
+    --primary-600: #059669;
+    --bg-base: #ffffff;
+    --bg-subtle: #f8fafc;
+    --bg-elevated: #ffffff;
+    --border-color: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-faint: #94a3b8;
+  }
+
+  [data-theme="dark"],
+  .dark {
+    --bg-base: #0b0f19;
+    --bg-subtle: #111827;
+    --bg-elevated: #1e293b;
+    --border-color: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-faint: #64748b;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--primary-color);
+  }
+  .bg-primary {
+    background-color: var(--primary-color);
+  }
+  .bg-primary-subtle {
+    background-color: var(--primary-50);
+  }
+  .border-primary {
+    border-color: var(--primary-color);
+  }
+  .border-primary-subtle {
+    border-color: var(--primary-100);
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Prose & Typography */
+.prose {
+  max-width: 100%;
+  color: var(--text-main);
+  line-height: 1.75;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.prose p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.prose strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose ul {
+  list-style-type: disc;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: var(--text-muted);
+}
+
+.prose ol {
+  list-style-type: decimal;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  color: var(--text-muted);
+}
+
+.prose li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.prose th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-color);
+  color: var(--text-main);
+  background-color: var(--bg-subtle);
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.prose code:not(pre code) {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875em;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  padding: 0.15em 0.4em;
+  border-radius: 0.375rem;
+  color: var(--primary-color);
+}
+
+.prose pre {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background-color: #111827 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+}
+
+.prose pre code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.875rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #f8fafc;
+}

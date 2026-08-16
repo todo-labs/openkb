@@ -1,0 +1,32 @@
+---
+import type { FlatNavItem } from '../../lib/navigation';
+
+interface Props {
+  currentSlug: string;
+  flatNav: FlatNavItem[];
+}
+
+const { currentSlug, flatNav } = Astro.props;
+const normalized = currentSlug.replace(/^\//, '').replace(/\/$/, '') || 'index';
+const currentItem = flatNav.find((item) => item.slug === normalized);
+---
+
+{currentItem && (
+  <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6 dark:text-slate-400">
+    <a href="/" class="hover:text-emerald-600 dark:hover:text-emerald-400">Docs</a>
+    {currentItem.tab && (
+      <>
+        <span>/</span>
+        <span>{currentItem.tab}</span>
+      </>
+    )}
+    {currentItem.group && (
+      <>
+        <span>/</span>
+        <span>{currentItem.group}</span>
+      </>
+    )}
+    <span>/</span>
+    <span class="font-medium text-slate-800 dark:text-slate-200">{currentItem.title}</span>
+  </nav>
+)}

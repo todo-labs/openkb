@@ -1,0 +1,113 @@
+---
+import type { DocsConfig } from '../lib/config';
+import type { OkfFrontmatter } from '../lib/okf';
+import type { SidebarSection, FlatNavItem, NavTab } from '../lib/navigation';
+import Navbar from '../components/layout/Navbar.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import TableOfContents from '../components/layout/TableOfContents.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import PageNavigation from '../components/layout/PageNavigation.astro';
+import Footer from '../components/layout/Footer.astro';
+import { SearchModal } from '../components/search/SearchModal';
+import { generateCssVariables } from '../lib/theme';
+import '../styles/global.css';
+
+interface Props {
+  config: DocsConfig;
+  frontmatter: OkfFrontmatter;
+  currentSlug: string;
+  headings?: { depth: number; slug: string; text: string }[];
+  sections: SidebarSection[];
+  flatNav: FlatNavItem[];
+  activeTab?: NavTab;
+  prev?: FlatNavItem;
+  next?: FlatNavItem;
+}
+
+const {
+  config,
+  frontmatter,
+  currentSlug,
+  headings = [],
+  sections,
+  flatNav,
+  activeTab,
+  prev,
+  next,
+} = Astro.props;
+
+const pageTitle = frontmatter.title ? `${frontmatter.title} — ${config.name}` : config.name;
+const pageDescription = frontmatter.description || config.description || 'Open-source documentation powered by OpenKB and Google OKF';
+const cssVars = generateCssVariables(config);
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href={config.favicon} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style set:html={cssVars}></style>
+    
+    <!-- Theme script to prevent FOUC -->
+    <script is:inline>
+      const savedTheme = localStorage.getItem('openkb-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+    <Navbar config={config} currentSlug={currentSlug} activeTab={activeTab} />
+
+    <div class="mx-auto flex w-full max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
+      <!-- Sidebar Navigation -->
+      <Sidebar sections={sections} currentSlug={currentSlug} />
+
+      <!-- Main Content Area -->
+      <main class="min-w-0 flex-1 py-8 md:px-8" data-pagefind-body>
+        <Breadcrumbs currentSlug={currentSlug} flatNav={flatNav} />
+
+        <article class="prose max-w-none">
+          <slot />
+        </article>
+
+        <PageNavigation prev={prev} next={next} />
+      </main>
+
+      <!-- Table of Contents Outline -->
+      {frontmatter.mode !== 'wide' && headings.length > 0 && (
+        <TableOfContents headings={headings} />
+      )}
+    </div>
+
+    <Footer config={config} />
+    <SearchModal client:load />
+
+    <!-- Load pagefind dynamically if present in dist -->
+    <script is:inline>
+      if (typeof window !== 'undefined') {
+        import('/pagefind/pagefind.js')
+          .then((m) => {
+            window.pagefind = m;
+          })
+          .catch(() => {
+            // Pagefind not generated yet in dev mode
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+---
+import type { FlatNavItem } from '../../lib/navigation';
+
+interface Props {
+  prev?: FlatNavItem;
+  next?: FlatNavItem;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<div class="mt-12 flex items-center justify-between border-t border-slate-200 pt-6 dark:border-slate-800">
+  {prev ? (
+    <a
+      href={prev.href}
+      class="group flex flex-col items-start rounded-lg border border-slate-200 p-4 transition-all hover:border-[var(--primary-color,#10b981)] hover:shadow-sm dark:border-slate-800"
+    >
+      <span class="text-xs text-slate-500 group-hover:text-[var(--primary-color,#10b981)] dark:text-slate-400">
+        ← Previous
+      </span>
+      <span class="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">
+        {prev.title}
+      </span>
+    </a>
+  ) : <div />}
+
+  {next ? (
+    <a
+      href={next.href}
+      class="group flex flex-col items-end rounded-lg border border-slate-200 p-4 transition-all hover:border-[var(--primary-color,#10b981)] hover:shadow-sm dark:border-slate-800"
+    >
+      <span class="text-xs text-slate-500 group-hover:text-[var(--primary-color,#10b981)] dark:text-slate-400">
+        Next →
+      </span>
+      <span class="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">
+        {next.title}
+      </span>
+    </a>
+  ) : <div />}
+</div>

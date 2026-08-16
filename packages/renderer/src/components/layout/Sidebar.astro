@@ -1,0 +1,57 @@
+---
+import type { SidebarSection } from '../../lib/navigation';
+
+interface Props {
+  sections: SidebarSection[];
+  currentSlug: string;
+}
+
+const { sections, currentSlug } = Astro.props;
+const normalizedCurrent = currentSlug.replace(/^\//, '').replace(/\/$/, '') || 'index';
+---
+
+<aside class="w-64 shrink-0 hidden md:block py-6 pr-6 border-r border-slate-200 dark:border-slate-800">
+  <nav class="space-y-6">
+    {sections.map((section) => (
+      <div>
+        {section.title && (
+          <h5 class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            {section.title}
+          </h5>
+        )}
+        <ul class="space-y-1">
+          {section.items.map((item) => {
+            const isActive = item.slug === normalizedCurrent;
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  style={
+                    isActive
+                      ? "background-color: var(--primary-50, rgba(16, 185, 129, 0.1)); color: var(--primary-color, #10b981);"
+                      : undefined
+                  }
+                  class={`flex items-center justify-between rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'font-semibold'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-200'
+                  }`}
+                >
+                  <span class="truncate">{item.title}</span>
+                  {item.tag && (
+                    <span
+                      style="background-color: var(--primary-100, rgba(16, 185, 129, 0.2)); color: var(--primary-color, #10b981);"
+                      class="ml-2 rounded px-1.5 py-0.5 text-[10px] font-semibold"
+                    >
+                      {item.tag}
+                    </span>
+                  )}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </nav>
+</aside>

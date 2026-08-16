@@ -1,0 +1,122 @@
+---
+import DocsLayout from '../layouts/DocsLayout.astro';
+import { loadDocsConfig } from '../lib/config';
+import { OkfFrontmatterSchema } from '../lib/okf';
+import {
+  flattenNavigation,
+  getSidebarSections,
+  getPrevNextNavigation,
+} from '../lib/navigation';
+import { ProvenanceBadge } from '../components/mdx/ProvenanceBadge';
+import {
+  Card,
+  CardGroup,
+  Tabs,
+  Tab,
+  Accordion,
+  AccordionGroup,
+  Steps,
+  Step,
+  CodeGroup,
+  Callout,
+  Note,
+  Tip,
+  Warning,
+  Danger,
+  Check,
+  ParamField,
+  ResponseField,
+  Expandable,
+  Frame,
+} from '../components/mdx';
+
+export async function getStaticPaths() {
+  // Using Astro Glob to load all .md and .mdx files from content
+  const pages = import.meta.glob('/content/**/*.{md,mdx}', { eager: true });
+  
+  const paths = Object.entries(pages).map(([filepath, file]: [string, any]) => {
+    const slug = filepath
+      .replace(/^\/content\//, '')
+      .replace(/\.(md|mdx)$/, '')
+      .replace(/\/index$/, '');
+
+    return {
+      params: { slug: slug === 'index' || slug === '' ? undefined : slug },
+      props: { file, slug: slug === '' ? 'index' : slug },
+    };
+  });
+
+  return paths;
+}
+
+const { file, slug = 'index' } = Astro.props;
+const config = loadDocsConfig();
+
+const rawFrontmatter = file.frontmatter || {};
+const parseResult = OkfFrontmatterSchema.safeParse(rawFrontmatter);
+const frontmatter = parseResult.success ? parseResult.data : rawFrontmatter;
+const Content = file.default;
+const headings = file.getHeadings ? file.getHeadings() : [];
+
+// Metadata map for titles & tags
+const flatNav = flattenNavigation(config);
+const { activeTab, sections } = getSidebarSections(config, slug);
+const { prev, next } = getPrevNextNavigation(flatNav, slug);
+---
+
+<DocsLayout
+  config={config}
+  frontmatter={frontmatter}
+  currentSlug={slug}
+  headings={headings}
+  sections={sections}
+  flatNav={flatNav}
+  activeTab={activeTab}
+  prev={prev}
+  next={next}
+>
+  <!-- Page Header -->
+  {frontmatter.title && (
+    <div class="mb-4">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+        {frontmatter.title}
+      </h1>
+      {frontmatter.description && (
+        <p class="mt-2 text-lg text-slate-600 dark:text-slate-400">
+          {frontmatter.description}
+        </p>
+      )}
+    </div>
+  )}
+
+  <!-- OKF v0.2 Provenance and Verification Badge Bar -->
+  {config.okf.showProvenance && (frontmatter.type || frontmatter.sources || frontmatter.generated) && (
+    <ProvenanceBadge frontmatter={frontmatter} client:load />
+  )}
+
+  <!-- Rendered MDX Content with global components -->
+  <Content
+    components={{
+      Card,
+      CardGroup,
+      Tabs,
+      Tab,
+      Accordion,
+      AccordionGroup,
+      Steps,
+      Step,
+      CodeGroup,
+      Callout,
+      Note,
+      Tip,
+      Warning,
+      Danger,
+      Check,
+      ParamField,
+      ResponseField,
+      Expandable,
+      Frame,
+      ProvenanceBadge,
+    }}
+  />
+</DocsLayout>

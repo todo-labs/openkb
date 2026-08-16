@@ -1,0 +1,40 @@
+---
+import type { DocsConfig } from '../../lib/config';
+
+interface Props {
+  config: DocsConfig;
+}
+
+const { config } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-slate-200 py-8 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8">
+    <div>
+      {config.footer?.copyright || `© ${year} ${config.name}. All rights reserved.`}
+      <span class="ml-2 text-slate-400 dark:text-slate-600">Built with <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color, #10b981);" class="hover:underline">OpenKB & Google OKF</a></span>
+    </div>
+
+    <!-- Social links -->
+    {config.footer?.socials && (
+      <div class="flex items-center gap-4">
+        {config.footer.socials.github && (
+          <a href={config.footer.socials.github} target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-100">
+            GitHub
+          </a>
+        )}
+        {config.footer.socials.x && (
+          <a href={config.footer.socials.x} target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-100">
+            X (Twitter)
+          </a>
+        )}
+        {config.footer.socials.discord && (
+          <a href={config.footer.socials.discord} target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-100">
+            Discord
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+</footer>
