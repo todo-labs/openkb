@@ -156,6 +156,16 @@ export const DocsConfigSchema = z.object({
       strict: z.boolean().default(false),
     })
     .default({ default: 'system', strict: false }),
+  search: z
+    .object({
+      enabled: z.boolean().default(true),
+      results: z.number().int().min(1).max(20).default(8),
+      titleWeight: z.number().min(0).max(10).default(8),
+      descriptionWeight: z.number().min(0).max(10).default(2),
+      tagsWeight: z.number().min(0).max(10).default(4),
+      typeWeight: z.number().min(0).max(10).default(3),
+    })
+    .default({ enabled: true, results: 8, titleWeight: 8, descriptionWeight: 2, tagsWeight: 4, typeWeight: 3 }),
   navigation: NavigationSchema.default({
     pages: ['index'],
   }),

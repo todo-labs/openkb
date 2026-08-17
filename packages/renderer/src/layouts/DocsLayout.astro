@@ -44,6 +44,7 @@ const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 const faviconUrl = config.favicon.startsWith('http')
   ? config.favicon
   : `${cleanBase}${config.favicon.replace(/^\//, '')}`;
+const searchTags = frontmatter.tags.join(' ');
 ---
 
 <!doctype html>
@@ -53,6 +54,10 @@ const faviconUrl = config.favicon.startsWith('http')
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
+    <meta data-pagefind-meta="title[content]" content={frontmatter.title || config.name} />
+    <meta data-pagefind-meta="description[content]" content={pageDescription} />
+    <meta data-pagefind-meta="type[content]" content={frontmatter.type} />
+    <meta data-pagefind-meta="tags[content]" content={searchTags} />
     <link rel="icon" type="image/svg+xml" href={faviconUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -100,7 +105,7 @@ const faviconUrl = config.favicon.startsWith('http')
     </div>
 
     <Footer config={config} />
-    <SearchModal client:load />
+    {config.search.enabled && <SearchModal client:load search={config.search} />}
 
     <!-- Load pagefind dynamically if present in dist -->
     <script is:inline define:vars={{ cleanBase }}>

@@ -20,6 +20,14 @@
     "default": "system",
     "strict": false
   },
+  "search": {
+    "enabled": true,
+    "results": 8,
+    "titleWeight": 8,
+    "descriptionWeight": 2,
+    "tagsWeight": 4,
+    "typeWeight": 3
+  },
   "navigation": {
     "tabs": [
       {
