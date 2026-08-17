@@ -1,0 +1,146 @@
+---
+type: Architecture
+title: OpenKB Monorepo Architecture
+description: The pnpm/Turbo monorepo layout of OpenKB, its three published packages (cli, renderer, generate), the docs site, and build orchestration.
+tags:
+  - monorepo
+  - pnpm
+  - turbo
+  - architecture
+  - astro
+  - cli
+status: stable
+generated:
+  by: "openkb/opencode"
+  at: "2026-08-16T23:57:32.895Z"
+sources:
+  - uri: "README.md"
+    author: "agent:opencode"
+  - uri: "package.json"
+    author: "agent:opencode"
+  - uri: "pnpm-workspace.yaml"
+    author: "agent:opencode"
+  - uri: "turbo.json"
+    author: "agent:opencode"
+  - uri: "tsconfig.base.json"
+    author: "agent:opencode"
+  - uri: "docs/docs.json"
+    author: "agent:opencode"
+  - uri: "docs/package.json"
+    author: "agent:opencode"
+  - uri: "docs/astro.config.mjs"
+    author: "agent:opencode"
+  - uri: "packages/cli/package.json"
+    author: "agent:opencode"
+  - uri: "packages/cli/src/index.ts"
+    author: "agent:opencode"
+  - uri: "packages/renderer/package.json"
+    author: "agent:opencode"
+  - uri: "packages/generate/package.json"
+    author: "agent:opencode"
+  - uri: "AGENTS.md"
+    author: "agent:opencode"
+---
+
+# OpenKB Monorepo Architecture
+
+OpenKB is an "AI-Native Open-Source Documentation Engine" (per `README.md`) built as a single-version pnpm workspace. The monorepo is a private root package named `openkb-monorepo` (v0.1.0) that publishes exactly three public npm packages and bundles an internal Astro-based documentation site.
+
+## Workspace topology
+
+`pnpm-workspace.yaml` declares three package globs:
+
+```yaml
+packages:
+  - "packages/*"
+  - "templates/*"
+  - "docs"
+```
+
+The three published packages live under `packages/` (`cli/`, `renderer/`, `generate/`), the docs site is the single `docs/` directory, and `templates/*` is reserved for scaffold templates consumed by `openkb init`. The workspace is pinned to `pnpm@9.15.0` via the `packageManager` field in the root `package.json`.
+
+Internal package dependencies use the `workspace:*` protocol:
+
+- `@todo-labs/openkb` (`packages/cli`) depends on `@todo-labs/openkb-generate: "workspace:*"` (`packages/cli/package.json`).
+- `openkb-docs` (`docs/package.json`) depends on `@todo-labs/openkb-renderer: "workspace:*"`.
+
+This means the CLI composes the generate package at runtime, and the docs site renders with the renderer package — a publish-anywhere layout where each package remains independently releasable.
+
+## The three published packages
+
+All three packages are `"type": "module"`, MIT-licensed, marked `publishConfig.access: "public"`, and point `main`/`types` at `./dist/index.js` / `./dist/index.d.ts` produced by `tsc`.
+
+### `@todo-labs/openkb` — `packages/cli`
+
+The command-line tool. Its `bin` entry `"openkb": "./dist/index.js"` (`packages/cli/package.json`) exposes a Commander program defined in `packages/cli/src/index.ts`:
+
+- `init [dir]` → `initCommand` from `./commands/init.js`
+- `dev` → `devCommand` with a `-p, --port` option (default `3000`)
+- `build` → `buildCommand`
+- `validate` → `validateCommand` (validates `docs.json` config and OKF v0.2 frontmatter)
+- `generate` → `generateCommand` with `--init`, `--update`, and `-o, --output <dir>` options
+
+`index.ts` also auto-loads a `.env` file from the current working directory via `process.loadEnvFile` (with a manual fallback parser) before parsing args. Each command is wrapped in try/catch and exits with code 1 on failure. CLI dependencies are `commander`, `gray-matter`, `js-yaml`, and `zod` (`packages/cli/package.json`).
+
+### `@todo-labs/openkb-renderer` — `packages/renderer`
+
+The "Astro-powered static documentation generator and MDX component library" (`README.md`). Beyond the plain `main`/`types` fields, it declares subpath exports that re-export source directly (`packages/renderer/package.json`):
+
+```json
+"./layouts/*": "./src/layouts/*",
+"./components/*": "./src/components/*",
+"./lib/*": "./src/lib/*",
+"./styles/*": "./src/styles/*"
+```
+
+`src/` is organized as `components/`, `layouts/`, `lib/`, `pages/`, and `styles/`. Its dependency set is Astro 5, `@astrojs/mdx`, `@astrojs/react`, `@astrojs/tailwind`, React 19, `pagefind`, `lucide-react`, `tailwind-merge`, and `gray-matter`/`js-yaml`/`zod` — matching the interactive MDX components advertised in `README.md` (`<Card>`, `<Tabs>`, `<Accordion>`, `<Callout>`, `<ParamField>`, `<ResponseField>`) and the "zero-server" Pagefind search.
+
+### `@todo-labs/openkb-generate` — `packages/generate`
+
+The "Agentic codebase documentation synthesis engine powered by OpenCode" (`packages/generate/package.json`). It depends on `@opencode-ai/sdk` for driving the agent. `src/` contains `opencode.ts`, `prompts.ts`, `scanner.ts`, `schema.ts`, `state.ts`, `validation.ts`, and `agent-pointers.ts` — the last handling `AGENTS.md`/`CLAUDE.md` agent pointers that `README.md` lists under "Agent-First Discoverability".
+
+## The docs site — `docs/`
+
+`docs` is an Astro project (`docs/package.json`, name `openkb-docs`). Its build script chains the static export and search indexing:
+
+```json
+"build": "ASTRO_TELEMETRY_DISABLED=1 astro build && pagefind --site dist"
+```
+
+`docs/astro.config.mjs` configures `output: 'static'`, `trailingSlash: 'always'`, a `site`/`base` derived from environment (`SITE_URL`, `BASE_PATH`, `GITHUB_PAGES`), and three integrations: `@astrojs/react`, `@astrojs/tailwind` (with `applyBaseStyles: false`), and `@astrojs/mdx` using the `github-dark-dimmed` Shiki theme with wrapping enabled.
+
+`docs/docs.json` is the site's configuration, validated against `https://openkb.dev/schema.json`. Notable settings:
+
+- `theme: "emerald"` with a primary color of `#10b981` and preset `atlas`.
+- Two navigation tabs: **Guides** (groups Overview → `index`, `quickstart`; Core Concepts → `okf-spec`, `components`, `ai-synthesis`) and **API Reference** (group CLI & SDK → `api-reference`).
+- An `okf` block declaring spec `version: "0.2"`, `bundleRoot: "./content"`, and `showProvenance: true`.
+
+The content bundle is `docs/content/`, containing `index.mdx`, `quickstart.mdx`, `okf-spec.mdx`, `components.mdx`, `ai-synthesis.mdx`, and `api-reference.mdx` (plus a generated `.last-update.json`). This is the OKF knowledge catalog that `AGENTS.md` points agents at before making architectural decisions.
+
+## Build orchestration with Turbo
+
+Turbo 2.4.0 (declared in the root `package.json` devDependencies) drives the root scripts: `dev`, `build`, `lint`, `test`, `typecheck`, and `clean` all delegate to `turbo run <task>`.
+
+`turbo.json` encodes the task graph:
+
+- `build`: `dependsOn: ["^build"]` (dependencies build first), caching `dist/**` and `.astro/**` as outputs.
+- `typecheck` and `test`: both `dependsOn: ["^build"]`, so they run against built upstream packages.
+- `lint`: no dependencies.
+- `dev`: `cache: false`, `persistent: true` — a long-running watch task that Turbo never considers "complete".
+
+Individual packages compile with `tsc` (`build: "tsc"`, `typecheck: "tsc --noEmit"`); the renderer additionally exposes Astro scripts (`dev`, `start`, `preview`, `astro`) with telemetry disabled. Shared TypeScript settings live in `tsconfig.base.json`: `target: ES2022`, `module: ESNext`, `moduleResolution: bundler`, `strict: true`, plus `declaration`, `declarationMap`, `sourceMap`, and `isolatedModules`.
+
+## Runtime command flow
+
+The CLI (`packages/cli/src/index.ts`) registers `init`, `dev`, `build`, `validate`, and `generate` on a `Command` named `openkb` versioned `0.1.0`, then runs `program.parseAsync(process.argv)`. `generate --init`/`--update` delegate to `generateCommand`, which drives `@todo-labs/openkb-generate`; the generated OKF documents land in `docs/content/` (the `okf.bundleRoot`), which is also where `AGENTS.md` instructs agents to look.
+
+## Open items (unverified)
+
+- `README.md` claims the build auto-generates `/llms.txt` and `/llms-full.txt`, and `AGENTS.md` lists `/llms.txt` as the "Agent Sitemap", but no `llms.txt` exists at the repository root — it is a build-time artifact not yet materialized in-tree.
+- `pnpm-workspace.yaml` reserves `templates/*`, but no `templates/` contents were inspected for this document.
+
+## Related documents
+
+- [Index](/index) — entry point of the knowledge catalog
+- [AI Synthesis](/ai-synthesis) — how generated OKF documents are produced
+- [OKF Spec](/okf-spec) — the Open Knowledge Format contract these documents follow

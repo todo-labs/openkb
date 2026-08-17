@@ -1,0 +1,138 @@
+---
+type: Package
+title: "@todo-labs/openkb-renderer Package"
+description: "The Astro-powered static documentation renderer for OpenKB: layouts, MDX components, navigation, theme utilities, and its package export map."
+tags: [openkb, renderer, astro, mdx, documentation, theming, navigation]
+status: stable
+sources:
+  - uri: packages/renderer/package.json
+    author: "agent:opencode"
+    usage_count: 5
+  - uri: packages/renderer/README.md
+    author: "agent:opencode"
+    usage_count: 3
+  - uri: packages/renderer/src/index.ts
+    author: "agent:opencode"
+    usage_count: 2
+  - uri: packages/renderer/src/layouts/DocsLayout.astro
+    author: "agent:opencode"
+    usage_count: 2
+  - uri: packages/renderer/src/components/mdx/index.ts
+    author: "agent:opencode"
+    usage_count: 1
+  - uri: packages/renderer/src/lib/config.ts
+    author: "agent:opencode"
+    usage_count: 3
+  - uri: packages/renderer/src/lib/theme.ts
+    author: "agent:opencode"
+    usage_count: 3
+  - uri: packages/renderer/src/lib/navigation.ts
+    author: "agent:opencode"
+    usage_count: 3
+  - uri: packages/renderer/src/lib/okf.ts
+    author: "agent:opencode"
+    usage_count: 2
+generated:
+  by: "openkb/opencode"
+  at: "2026-08-17T00:00:07.988Z"
+---
+
+# @todo-labs/openkb-renderer
+
+`@todo-labs/openkb-renderer` is the Astro-based static documentation renderer shipped inside the OpenKB repository at `packages/renderer`. It provides the layouts, MDX components, navigation helpers, and theming utilities that turn an OpenKB content bundle into a documentation site. Its declared name, purpose, and metadata are recorded in `packages/renderer/package.json` (name `@todo-labs/openkb-renderer`, version `0.1.0`, description "Astro-based static documentation renderer for OpenKB", MIT license, `type: "module"`).
+
+## Package export map
+
+The package defines two kinds of entry points in `packages/renderer/package.json`:
+
+- **Programmatic (built) entry**: `"."` resolves `types` to `./dist/index.d.ts` and `import` to `./dist/index.js`. The build script is plain `tsc` (`"build": "tsc"`), so the `dist` output is produced by TypeScript compilation rather than an Astro build; `"typecheck": "tsc --noEmit"` is the type-checking script.
+- **Source-path subpath exports**: `"./layouts/*"`, `"./components/*"`, `"./lib/*"`, and `"./styles/*"` each map directly into the matching `src/` directory. This is why the README example imports `@todo-labs/openkb-renderer/layouts/DocsLayout.astro` directly from source.
+
+The `files` field limits published content to `dist`, `src`, and `README.md`. The runtime dependencies (from `dependencies`) are `astro` (^5.3.0), `@astrojs/mdx`, `@astrojs/react`, `@astrojs/tailwind`, `react`/`react-dom` (^19), `tailwindcss` (^3.4.17) with `tailwind-merge` and `clsx`, `gray-matter` and `js-yaml` for frontmatter parsing, `pagefind` for search indexing, `lucide-react` for icons, and `zod` (^3.24.1) for schema validation.
+
+## Module surface (`src/index.ts`)
+
+`packages/renderer/src/index.ts` is the barrel that re-exports four library modules and one component group:
+
+```ts
+export * from './components/mdx';
+export * from './lib/config';
+export * from './lib/okf';
+export * from './lib/navigation';
+export * from './lib/theme';
+```
+
+### MDX components (`src/components/mdx/`)
+
+The `index.ts` under `src/components/mdx/` re-exports eight components: `Card`, `Tabs`, `Accordion`, `Steps`, `CodeGroup`, `Callout`, `ParamField`, and `ProvenanceBadge`. Each maps to a `.tsx` file in the same directory, matching the README's claim that the package "exports MDX components such as `Card`, `Tabs`, `Callout`, `Steps`, and `ProvenanceBadge`". `ProvenanceBadge` is the component that renders the OKF provenance display controlled by `okf.showProvenance` (see below).
+
+## Configuration schema (`src/lib/config.ts`)
+
+`config.ts` defines the Zod schema for the site configuration file that the renderer reads at runtime, called `docs.json` (or `openkb.json`).
+
+### `loadDocsConfig(rootDir)` and file resolution
+
+`loadDocsConfig(rootDir = process.cwd())` looks for `docs.json` then `openkb.json` under the root directory (using `fs.existsSync`). It parses the first existing file with `JSON.parse` and validates it with `DocsConfigSchema.parse`. On any parse/validation failure it logs `[OpenKB] Warning: Failed to parse ...` and falls back to defaults; if no config file exists it returns `DocsConfigSchema.parse({})` with defaulted values. This matches the README statement that "The renderer reads `docs.json` (or `openkb.json`) from the current working directory."
+
+### The `DocsConfig` schema
+
+`DocsConfigSchema` validates and defaults the following top-level keys:
+
+- `name` (default `"OpenKB Docs"`) and `description`.
+- `theme` — one of `emerald` | `sapphire` | `obsidian` | `amber` | `rose`, default `emerald`.
+- `colors` — optional `{ primary, light, dark }`, defaulting to `primary: '#10b981'`.
+- `style` — a nested object defaulting to `{ preset: 'atlas', typography: 'sans', density: 'comfortable', radius: 'soft', layout: 'standard' }`, where `preset` is `atlas` | `terminal` | `notebook`, and an optional `style.colors` map of surface overrides (`background`, `backgroundSubtle`, `text`, `textMuted`, `border`, `codeBackground`). The README's example config (`preset: "atlas"`, `typography: "sans"`, `density: "comfortable"`, `radius: "soft"`, `layout: "standard"`) validates directly against this schema.
+- `logo` (light/dark image paths, `href` default `/`, optional `text`), `favicon` (default `/favicon.svg`).
+- `appearance` — `{ default: 'system' | 'light' | 'dark', strict }`, default `{ default: 'system', strict: false }`.
+- `navigation` — via `NavigationSchema`, defaulting to `{ pages: ['index'] }`. Navigation supports three shapes: `tabs` (each tab with `tab`, optional `icon`/`href`, and optional `groups`/`pages`), `groups` (each group with `group`, optional `icon`/`expanded`, and a recursive `pages` list of page strings or nested `NavGroup`s), and a flat `pages` list.
+- `navbar` — optional `links` (`{ label, href, target? }[]`, default `[]`) and optional `primary` action (`{ type: 'button' | 'github', label, href }`).
+- `footer` — optional `socials` (`github`, `x`, `discord`, `linkedin`), `copyright`, and `links`.
+- `okf` — `{ version: '0.2', bundleRoot: './content', showProvenance: true }`. `bundleRoot` names the directory the content bundle lives in and `showProvenance` toggles the provenance badge.
+- `generate` — optional `{ outputDir: './openwiki' }`.
+
+## Theme utilities (`src/lib/theme.ts`)
+
+`theme.ts` converts a `DocsConfig` into CSS custom properties.
+
+- `STYLE_PRESETS` is a `Record<'atlas' | 'terminal' | 'notebook', SurfaceTokens>` with full surface token sets (background, backgroundSubtle, elevated, text, textMuted, textFaint, border, borderSubtle, codeBackground, navbar) — `atlas` "a calm reading surface ... the default for knowledge bases", `terminal` "Dense, high-signal treatment for APIs and operational runbooks", `notebook` "Warm paper for explanatory guides and learning material". This backs the README's claim that "`atlas`, `terminal`, and `notebook` are supplied presets. Surface colors can be individually overridden through `style.colors`."
+- `THEME_PRESETS` maps the five theme names to primary/light/dark color triplets (`emerald`, `sapphire`, `obsidian`, `amber`, `rose`).
+- `resolveThemeColors(config)` merges `config.colors` over the theme preset and derives derivative tokens (`primary50`, `primary100` via `color-mix(...)`), returning a `ThemeColors` object.
+- `generateCssVariables(config)` emits a `:root { ... }` block setting `--primary-*`, `--bg-base`/`--bg-subtle`/`--bg-elevated`, `--navbar-bg`, `--text-main`/`--text-muted`/`--text-faint`, `--border-color`/`--border-subtle`, `--code-bg`, `--font-body` (Inter, system, or JetBrains Mono depending on `style.typography`), density-driven `--prose-size`/`--prose-leading`/`--section-space`, `--control-radius`/`--card-radius`, and `--docs-max-width` (`96rem` for `wide`, else `84rem`). Individual style tokens always win over the preset (`custom.background || preset.background`), matching the schema comment "individual tokens below always take precedence".
+
+## Navigation helpers (`src/lib/navigation.ts`)
+
+`navigation.ts` derives nav structures from a `DocsConfig`:
+
+- `formatNavHref(slug, baseUrl)` normalizes a slug into a trailing-slash href, mapping `index`/empty to the base path.
+- `flattenNavigation(config, pagesMetadata, baseUrl)` walks tabs → groups → flat pages to produce a linear `FlatNavItem[]` (slug, title, href, icon?, tag?, group?, tab?), deriving default titles from the last slug segment with dashes/underscores replaced and title-cased. Used for prev/next traversal.
+- `getSidebarSections(config, currentSlug, pagesMetadata, baseUrl)` determines the active tab by locating which tab (or group) contains the normalized current slug — defaulting to the first tab when nothing matches — then builds `SidebarSection[]` with nested subgroup recursion and per-item `active` flags.
+- `getPrevNextNavigation(flatNav, currentSlug)` finds the previous and next `FlatNavItem` by index in the flattened list.
+
+## OKF frontmatter handling (`src/lib/okf.ts`)
+
+`okf.ts` implements Google OKF v0.2 parsing on top of `gray-matter` and `zod`:
+
+- Schemas: `OkfSourceSchema` (uri + optional author/usage_count/last_modified/usage_window, §5.1), `OkfVerificationSchema` (by/at/notes, §5.3), `OkfGenerationSchema` (by/at, §5.2), and `OkfFrontmatterSchema` — a full OKF v0.2 frontmatter validator with the required `type` (default `'Concept'`), `title`, `description`, `tags`, `status` (`draft` | `stable` | `deprecated`, default `stable`), `sources`, `generated`, `verified`, attested-computation fields (`runtime`, `computation`, `executor`, `attester`, §10), plus OpenKB presentation fields (`sidebarTitle`, `icon`, `mode` — `default`|`wide`|`custom`|`center`, `deprecated`, `hidden`, `tag`). The schema is `.passthrough()` to preserve unknown keys per OKF §11.
+- `parseOkfDocument(rawContent)` splits frontmatter with `matter()`, validates it, extracts internal relative markdown links `[Label](/target)` (excluding `http`/`https`/anchor targets), and estimates `readingTimeMinutes` at 200 wpm.
+- `formatActorLabel(actor)` classifies an OKF actor string as `human:` / `process:` prefixes or a bare `agent` label.
+
+## Layout shell (`src/layouts/DocsLayout.astro`)
+
+`DocsLayout.astro` composes the full page shell and is the component used in the README usage example. Its `Props` are `config: DocsConfig`, `frontmatter: OkfFrontmatter`, `currentSlug`, optional `headings` (`{ depth, slug, text }[]`), `sections: SidebarSection[]`, `flatNav: FlatNavItem[]`, plus optional `activeTab`, `prev`, `next`.
+
+The page title is derived as `${frontmatter.title} — ${config.name}` (or just `config.name`), and the description falls back to `config.description` or the default "Open-source documentation powered by OpenKB and Google OKF". It renders:
+
+- A `<head>` with the `generateCssVariables` output injected via `<style set:html>`, Google Fonts links for Inter and JetBrains Mono, and an inline FOUC-prevention script that reads `openkb-theme` from `localStorage` and sets `data-theme`/`dark` class.
+- `Navbar`, then a `.docs-shell` grid containing `Sidebar`, a `<main data-pagefind-body>` (the Pagefind-indexed content region) with `Breadcrumbs`, an `<article class="prose max-w-none">` slot, and `PageNavigation` (prev/next).
+- `TableOfContents` rendered only when `frontmatter.mode !== 'wide'` and `headings.length > 0`.
+- `Footer`, `SearchModal` with `client:load`, and an inline script that lazily imports `${cleanBase}pagefind/pagefind.js` and assigns `window.pagefind` (swallowing the rejection when pagefind isn't built yet, e.g. in dev).
+
+The `html` element gets `data-docs-style={config.style.preset}` and `class="scroll-smooth"`.
+
+## Behavior summary
+
+End to end, an OpenKB site calls `loadDocsConfig()` from the root of the project, builds `sections`/`flatNav` from the navigation helpers, parses each content file with `parseOkfDocument`, and renders pages through `DocsLayout`, which layers theme CSS variables, navbar/sidebar/toc chrome, the prose article slot, and pagefind-powered search. The `[...slug].astro` page (in `src/pages/`) and the `llms.txt` / `llms-full.txt` endpoints (in `src/pages/`) are additional renderer pages present in this package, but their implementations were not inspected for this document.
+
+## Limitations
+
+- `src/styles/global.css` and the remaining layout components (`Navbar.astro`, `Sidebar.astro`, `TableOfContents.astro`, `Breadcrumbs.astro`, `Footer.astro`, `PageNavigation.astro`, `SearchModal.tsx`) are listed by the export map but were not read during this research pass; claims about their internal behavior are therefore not made here.
