@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { discoverConceptsWithOpenCode, synthesizeWithOpenCode } from './opencode.js';
 import { injectAgentPointers } from './agent-pointers.js';
-import { saveState } from './state.js';
+import { changedFilesSince, loadState, saveState } from './state.js';
+import { updateGeneratedNavigation } from './navigation.js';
 import { validateGeneratedOkf } from './validation.js';
 
 export interface GenerateOptions {
@@ -20,13 +21,27 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  const previousState = loadState(outputDir);
+  const changedFiles = options.mode === 'update' ? changedFilesSince(rootDir, previousState?.gitCommitSha) : null;
+  if (options.mode === 'update' && changedFiles?.length === 0) {
+    console.log('✨ [OpenKB] No committed repository changes since the previous generation; documentation is current.');
+    return;
+  }
+
   console.log('🗺️  [OpenKB] Discovering the repository’s complete concept inventory via OpenCode...');
   const conceptsToGenerate = await discoverConceptsWithOpenCode(rootDir);
-  console.log(`🤖 [OpenKB] Synthesizing ${conceptsToGenerate.length} evidence-backed OKF v0.2 concept documents via OpenCode...`);
+  const previousConcepts = new Map(previousState?.concepts?.map((concept) => [concept.slug, concept]) ?? []);
+  const conceptsToRefresh = changedFiles && previousState?.concepts
+    ? conceptsToGenerate.filter((concept) => {
+        const previous = previousConcepts.get(concept.slug);
+        return !previous || previous.sources.some((source) => changedFiles.includes(source));
+      })
+    : conceptsToGenerate;
+  console.log(`🤖 [OpenKB] Synthesizing ${conceptsToRefresh.length} evidence-backed OKF v0.2 concept documents via OpenCode...`);
 
   const generatedFiles: string[] = [];
 
-  for (const concept of conceptsToGenerate) {
+  for (const concept of conceptsToRefresh) {
     console.log(`   ⏳ Synthesizing "${concept.title}" (${concept.type})...`);
     
     try {
@@ -44,7 +59,11 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
   console.log('📌 [OpenKB] Updating coding agent pointers in AGENTS.md and CLAUDE.md...');
   injectAgentPointers(rootDir, path.relative(rootDir, outputDir) || 'content');
 
-  saveState(outputDir, generatedFiles);
+  const knownGeneratedFiles = options.mode === 'update'
+    ? [...new Set([...(previousState?.generatedConcepts ?? []), ...generatedFiles])]
+    : generatedFiles;
+  updateGeneratedNavigation(rootDir, outputDir, knownGeneratedFiles);
+  saveState(outputDir, knownGeneratedFiles, conceptsToGenerate);
   console.log('✨ [OpenKB] Codebase knowledge synthesis complete!\n');
 }
 
@@ -55,3 +74,4 @@ export * from './state.js';
 export * from './schema.js';
 export * from './opencode.js';
 export * from './validation.js';
+export * from './navigation.js';

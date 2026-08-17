@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import type { DiscoveredConcept } from './opencode.js';
 
 export interface OpenKBState {
   lastUpdated: string;
   gitCommitSha?: string;
   generatedConcepts: string[];
+  concepts?: DiscoveredConcept[];
 }
 
 export function getStateFilePath(outputDir: string): string {
@@ -22,7 +24,24 @@ export function loadState(outputDir: string): OpenKBState | null {
   return null;
 }
 
-export function saveState(outputDir: string, generatedConcepts: string[]): void {
+export function changedFilesSince(rootDir: string, commitSha?: string): string[] | null {
+  if (!commitSha) return null;
+
+  try {
+    return execSync(`git diff --name-only ${commitSha}...HEAD`, {
+      cwd: rootDir,
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'ignore'],
+    })
+      .split('\n')
+      .map((file) => file.trim())
+      .filter(Boolean);
+  } catch {
+    return null;
+  }
+}
+
+export function saveState(outputDir: string, generatedConcepts: string[], concepts: DiscoveredConcept[]): void {
   let gitCommitSha: string | undefined;
   try {
     gitCommitSha = execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim();
@@ -32,6 +51,7 @@ export function saveState(outputDir: string, generatedConcepts: string[]): void 
     lastUpdated: new Date().toISOString(),
     gitCommitSha,
     generatedConcepts,
+    concepts,
   };
 
   if (!fs.existsSync(outputDir)) {

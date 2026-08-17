@@ -26,7 +26,9 @@ OpenKB uses `openrouter/deepseek/deepseek-v4-flash` as its fixed synthesis model
 
 ## Current workflow
 
-OpenCode first maps the repository into a complete, non-overlapping inventory of material concepts. OpenKB then generates one OKF document for every discovered concept—there is no fixed document-count cap. It is restricted to OpenRouter as its model provider. The embedded planning and documentation agents are read-only: file edits, shell access, web access, and external directories are denied. They must cite real repository-relative source files, and OpenKB rejects drafts with invalid or fabricated provenance. Generated documents update agent pointers in `AGENTS.md` and `CLAUDE.md` and record generation state alongside the output.
+OpenCode first maps the repository into a complete, non-overlapping inventory of material concepts. OpenKB then generates one OKF document for every discovered concept—there is no fixed document-count cap. It is restricted to OpenRouter as its model provider. The embedded planning and documentation agents are read-only: file edits, shell access, web access, and external directories are denied. They must cite real repository-relative source files, and OpenKB rejects drafts with invalid or fabricated provenance.
+
+`openkb generate --update` stores the discovered inventory and Git commit in `.last-update.json`. On later runs it skips work when no committed files changed; otherwise it regenerates only new concepts and concepts whose mapped source files changed. Generated pages are also added to a `Generated Knowledge` group in the nearest `docs.json`, while preserving existing groups.
 
 Treat generated files as drafts: review their claims and source links before marking them verified in OKF frontmatter.
 
