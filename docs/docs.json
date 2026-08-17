@@ -27,11 +27,25 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["index", "quickstart"]
+            "pages": [
+              "index",
+              "quickstart"
+            ]
           },
           {
             "group": "Core Concepts",
-            "pages": ["okf-spec", "components", "ai-synthesis"]
+            "pages": [
+              "okf-spec",
+              "components",
+              "ai-synthesis"
+            ]
+          },
+          {
+            "group": "Generated Knowledge",
+            "pages": [
+              "architecture",
+              "openkb-renderer"
+            ]
           }
         ]
       },
@@ -40,7 +54,9 @@
         "groups": [
           {
             "group": "CLI & SDK",
-            "pages": ["api-reference"]
+            "pages": [
+              "api-reference"
+            ]
           }
         ]
       }
@@ -48,8 +64,14 @@
   },
   "navbar": {
     "links": [
-      { "label": "GitHub", "href": "https://github.com/todo-labs/openkb" },
-      { "label": "Google OKF Spec", "href": "https://github.com/GoogleCloudPlatform/knowledge-catalog" }
+      {
+        "label": "GitHub",
+        "href": "https://github.com/todo-labs/openkb"
+      },
+      {
+        "label": "Google OKF Spec",
+        "href": "https://github.com/GoogleCloudPlatform/knowledge-catalog"
+      }
     ],
     "primary": {
       "type": "button",
