@@ -209,7 +209,7 @@ export const DocsConfigSchema = z.object({
     .default({ version: '0.2', bundleRoot: './content', showProvenance: true }),
   generate: z
     .object({
-      outputDir: z.string().default('./openwiki'),
+      outputDir: z.string().default('./content'),
     })
     .optional(),
 });
