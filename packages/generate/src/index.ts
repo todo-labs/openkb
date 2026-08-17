@@ -22,7 +22,12 @@ export async function generateKnowledgeBase(options: GenerateOptions = {}): Prom
   }
 
   const previousState = loadState(outputDir);
-  const changedFiles = options.mode === 'update' ? changedFilesSince(rootDir, previousState?.gitCommitSha) : null;
+  const outputPrefix = `${path.relative(rootDir, outputDir).split(path.sep).join('/')}/`;
+  const changedFiles = options.mode === 'update'
+    ? changedFilesSince(rootDir, previousState?.gitCommitSha)?.filter((file) =>
+        !file.startsWith(outputPrefix) && file !== 'AGENTS.md' && file !== 'CLAUDE.md'
+      )
+    : null;
   if (options.mode === 'update' && changedFiles?.length === 0) {
     console.log('✨ [OpenKB] No committed repository changes since the previous generation; documentation is current.');
     return;
